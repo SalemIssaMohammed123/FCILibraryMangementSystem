@@ -1,0 +1,41 @@
+﻿@{
+
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Test.ViewModels
+@model RoleDeleteViewModel
+<br /> <br />
+<h2 class="text-center">Delete Role</h2>
+<br />
+<h3>Are you sure want to delete this?</h3>
+<h4>Please, move the users in this role to another role if this role contains role!!!! </h4>
+<br />
+<div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+    <div class="card-header">Role</div>
+    <div class="card-body">
+        <h5 class="card-title">@Model.RoleName</h5>
+        <h5 class="card-title">This contains these users:</h5>
+        @{
+            var i = 1;
+        }
+        @foreach (string role in Model.UsersWithRole)
+        {
+            <p class="card-text">i+"-"+role</p>
+            i++;
+        }
+    </div>
+</div>
+<br />
+  <form asp-action="Delete" asp-controller="Role" asp-route-id="@Model.RoleId" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <button type="submit" value="Delete" class="btn btn-default">Delete</button>
+  </form>
+<br />
+<a asp-action="index" asp-controller="Role" class="btn btn-primary">Back to list</a>
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+
+

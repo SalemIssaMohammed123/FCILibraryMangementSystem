@@ -1,0 +1,26 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Author
+<br /> <br />
+<h2 class="text-center">Details Inforamtion</h2>
+<br />
+<partial name="_DetailsDeletePartial" model=Model></partial>
+<br />
+<p>
+    <a asp-action="Edit" asp-controller="Author" asp-route-itemid="@Model.AuthorID" class="btn btn-primary">Edit</a>
+<br />
+   <a asp-action="index" asp-controller="Author" class="btn btn-primary">Back to list</a>
+
+</p>
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+
+

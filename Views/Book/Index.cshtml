@@ -1,0 +1,90 @@
+﻿<br /> <br />
+<h2 class="text-center">Books Informations</h2>
+<form asp-action="index" asp-controller="Book" method="Get">
+    <div class="col-md-4">
+    <input type="text" id="search" name="search" value="@Convert.ToString(TempData["search for specific Book"])" onchange="search_Book()" class ="form-control" style ="max-width:100%" placeholder ="Search Book here..."/>
+           @if ((bool)ViewData["checking"] == true)
+            {
+           <input type="text" id="check" name="check" value="The Book you search doesnot exist in our system" readonly/>
+            }
+
+    </div>
+     <div class="col-md-4">
+        <select name="SortOrder" id="SortOrder" class="form-select" aria-label="Default select example">
+             <option value="">Which the type of sort your search depend on</option>
+             @{
+                if ((string)TempData["sort for search for specific Book"] == "DeptName-desc")
+                {
+                    <option value="DeptName-desc" selected>DepartementName</option>
+                }
+                else
+                {
+                    <option value="DeptName-desc">DepartementName</option>
+
+                }
+                if ((string)TempData["sort for search for specific Book"] == "Book-Name")
+                {
+                    <option value="Book-Name" selected>BookTitle</option>
+                }
+                else
+                {
+                    <option value="Book-Name">BookTitle</option>
+
+                }
+                if ((string)TempData["sort for search for specific Book"] == "NumberOfPagesOfTheBooks")
+                {
+                    <option value="NumberOfPagesOfTheBooks" selected>NumberOfPagesOfTheBooks</option>
+                }
+                else
+                {
+                    <option value="NumberOfPagesOfTheBooks">NumberOfPagesOfTheBooks</option>
+
+                }
+             }
+         </select>
+    </div>
+    <div class="col-md-2">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>Search</button>
+    </div>
+</form>
+
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
+    {
+        <button type="button" class="btn btn-primary" style="position:relative; left:855px;">
+            <i class="fa fa-search"></i><a style="text-decoration:none; color:white;" asp-action="Create" asp-controller="Book">Create</a>
+        </button>
+    }
+}
+<partial name="_SearchPartial" id="partial"></partial>
+ 
+
+@section Scripts{
+    <script>
+        function search_Book()
+        {
+            var search = document.getElementById("search").value;
+            var sort = document.getElementById("SortOrder").value;
+            $.ajax({
+                url: "/Book/Search",
+                data: { "search": search, "SortOrder": sort },
+                success: function (result) {
+                    var partialElement = document.getElementById("partial");
+                    if (partialElement !== null) 
+                    {
+                        document.getElementById("partial").innerHTML = result;
+                    }
+                }
+            });
+        }
+       
+
+    </script>
+}
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+
+

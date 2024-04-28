@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\BootstrapFooter.js" />
+    <Content Remove="wwwroot\js\Vision.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\BootstrapFooter.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\Vision.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\Images\Book\" />
+    <Folder Include="wwwroot\Images\Admin\" />
+    <Folder Include="wwwroot\Images\EndUser\" />
+    <Folder Include="wwwroot\Images\LeaderOfFCI_Assuit\" />
+    <Folder Include="wwwroot\Images\TeacherAdmin\" />
+    <Folder Include="wwwroot\Images\TeacherStudent\" />
+    <Folder Include="wwwroot\Images\Student\" />
+    <Folder Include="wwwroot\Images\Teacher\" />
+    <Folder Include="wwwroot\Images\Publisher\" />
+    <Folder Include="wwwroot\Images\Publisher\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\bootstrap\._.DS_Store" />
+    <None Include="wwwroot\css\bootstrap\._mixins" />
+    <None Include="wwwroot\css\bootstrap\._utilities" />
+    <None Include="wwwroot\css\bootstrap\mixins\._.DS_Store" />
+    <None Include="wwwroot\js\BootstrapFooter.js" />
+    <None Include="wwwroot\js\Vision.js" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+﻿@model Author
+
+<div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+  <div class="card-header">Author</div>
+  <div class="card-body">
+    <h5 class="card-title">@Model.AuthorName</h5>
+    <p class="card-text">@Model.DescripTion</p>
+  </div>
+</div>
+<div class="card bg-dark text-white">
+  <img src="~/Images/Author/@Model.ImageUrl" class="card-img" >
+  <div class="card-img-overlay">
+    <h5 class="card-title">@Model.AuthorName</h5>
+    <p class="card-text">My Email is for communication: </p>
+    <p class="card-text">@Model.Email</p>
+  </div>
+</div>

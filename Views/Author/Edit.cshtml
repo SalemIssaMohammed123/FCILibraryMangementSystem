@@ -1,0 +1,28 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Author
+<br /> <br />
+<h2 class="text-center">Edit Data into Author Tabel</h2>
+<form asp-action="Edit" asp-controller="Author" asp-route-id="@Model.AuthorID" method="post" enctype="multipart/form-data">
+    <div class="mb-3" asp-validation-summary="All"></div>
+    <br />
+    <partial name="_CreateEditPartial" model="Model"></partial>
+    <br />
+    <button type="submit" value="Edit" class="btn btn-primary">Submit</button>
+</form>
+<br /> <br />
+<a asp-action="index" asp-controller="Author" class="btn btn-primary">Back to list</a>
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial"></partial>
+}
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+

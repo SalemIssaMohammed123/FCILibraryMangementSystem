@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<link href="~/css/StyleSheet.css" rel="stylesheet" />
+
+<div id="demo" class="carousel slide" data-ride="carousel">
+
+    <!-- Indicators -->
+    <ul class="carousel-indicators">
+        <li data-target="#demo" data-slide-to="0" class="active"></li>
+        <li data-target="#demo" data-slide-to="1"></li>
+        <li data-target="#demo" data-slide-to="2"></li>
+        <li data-target="#demo" data-slide-to="3"></li>
+        <li data-target="#demo" data-slide-to="4"></li>
+        <li data-target="#demo" data-slide-to="5"></li>
+    </ul>
+
+    <!-- The slideshow -->
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="~/Images/Home/Homemage.jpg" alt="Los Angeles" width="1100" height="400">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Images/Home/thumb_26.jpg" alt="New York" width="1100" height="400">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Images/Home/images.jpg" alt="Chicago" width="1100" height="400">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Images/Home/library-mv.jpg" alt="New York" width="1100" height="400">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Images/Home/public_library.jpg" alt="New York" width="1100" height="400">
+        </div>
+        <div class="carousel-item">
+            <img src="~/Images/Home/Graduation.jpg" alt="New York" width="1100" height="400">
+        </div>
+    </div>
+
+    <!-- Left and right controls -->
+    <a class="carousel-control-prev" href="#demo" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </a>
+    <a class="carousel-control-next" href="#demo" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </a>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="text-primary"><h2>Requirments</h2></div>
+        <ul>
+            <li>MVC Code-First </li>
+            <li>Relational Databse with MVC </li>
+            <li>Use of DataAnnotaions in Model</li>
+            <li>Use of ViewModels</li>
+            <li>Use AJAX</li>
+            <li>Use of Partial View</li>
+            <li>Identity Authentcation with role</li>
+            <li>Bootstrap Responsive</li>
+            <li>Bootstrap Design</li>
+            <li>Relational Data Operation (Crud_Operations)</li>
+            <li>Insert Enumerable / List / Array / Model Data in Table Using JQuery</li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <div class="text-primary"><h2>Highlights</h2></div>
+        <ul>
+            <li>EF Version 6.2.0</li>
+            <li>Bootstrap 4 + Font-awesome 4.7.0</li>
+            <li>PagedList for paging</li>
+            <li>Bootstrap DatePicker V3</li>
+            <li>Only Admin can Create & Delete Roles </li>
+            <li>Only Admin can see all User List</li>
+            <li>Only Admin can Create Id for Teacher</li>
+            <li>Admin can Insert, Update & Delete Data</li>
+            <li>Teacher can Insert & Update</li>
+            <li>Other Student can read only</li>
+            <li>Every Student can see own Profile </li>
+        </ul>
+
+    </div>
+    <div class="col-md-4">
+        <div class="text-primary"><h2>Help</h2></div>
+        <ul>
+            <li>
+                <h4>LibraryManagement</h4>
+                <ul>
+                    <li>CRUD Operation On all Table</li>
+                    <li>Fully-AJAX supported</li>
+                    <li>Pagingand searching support</li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</div>
+@*
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+*@
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+

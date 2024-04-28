@@ -1,0 +1,108 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Register";
+    Layout = null;
+}
+@using Test.ViewModels;
+@model RegisterUserViewModel
+<link href="~/css/StyleSheet.css" rel="stylesheet" />
+<br />
+<br />
+<section class="vh-100">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 text-black">
+
+                <div class="px-5 ms-xl-4">
+                    <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/Home/Assuit_Unversity_Logo2.jpg" alt="FCI Assuit University logo" width="70" height="40" class="rounded-circle" /> <span class="h1 fw-bold mb-0" style="color:black">FCI Library</span></a>
+                </div>
+
+                <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+
+                    <form style="width: 23rem;" asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <br />
+                        <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register</h3>
+                        <br />
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label"></label>
+                            <input type="file" class="form-control" name="image" id="image" accept="image/jpeg,image/png,image/gif,imag/svg" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+                        <br />
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                            <input asp-for="UserName" class="form-control form-control-lg" />
+                            <label asp-for="UserName" class="form-label"></label>
+                        </div>
+                        <br />
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                            <input asp-for="FirstName" class="form-control form-control-lg" />
+                            <label asp-for="FirstName" class="form-label"></label>
+                        </div>
+                        <br />
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                            <input asp-for="LastName" class="form-control form-control-lg" />
+                            <label asp-for="LastName" class="form-label"></label>
+                        </div>
+                        <br />
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                            <input asp-for="Address" class="form-control form-control-lg" />
+                            <label asp-for="Address" class="form-label"></label>
+                        </div>
+                        <br />
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <input asp-for="Password" class="form-control form-control-lg" />
+                            <label class="form-label" asp-for="Password"></label>
+                        </div>
+
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            <input asp-for="ConfirmPassword" class="form-control form-control-lg" />
+                            <label class="form-label" asp-for="ConfirmPassword"></label>
+                        </div>
+                        <br />
+                        <div class="pt-1 mb-4">
+                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" style="width: 370px;" type="submit" value="Register">RegisterNow</button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+            <div class="col-sm-6 px-0 d-none d-sm-block">
+                <img src="~/Images/Home/adv1.jpg"
+                     alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
+            </div>
+        </div>
+    </div>
+</section>
+@* src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp" *@
+<style>
+    .bg-image-vertical {
+        position: relative;
+        overflow: hidden;
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: auto 100%;
+    }
+
+    @@media (min-width: 1025px) {
+        .h-custom-2 {
+            height: 100%;
+        }
+    }
+</style>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+

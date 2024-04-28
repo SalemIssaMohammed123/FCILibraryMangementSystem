@@ -1,0 +1,54 @@
+﻿<br /> <br />
+<h2 class="text-center">TeacherAdmins Informations</h2>
+<form asp-action="index" asp-controller="TeacherAdmin" method="Get">
+    <div class="col-md-4">
+        <input type="text" id="search" name="search" value="@Convert.ToString(TempData["search for specific TeacherAdmin"])" onchange="search_teacherAdmin()" class="form-control" style="max-width:100%" placeholder="Search TeacherAdmin here..." />
+           @if ((bool)ViewData["checking"] == true)
+            {
+           <input type="text" id="check" name="check" value="The TeacherAdmin you search doesnot exist in our system" readonly/>
+            }
+
+    </div>
+    <div class="col-md-2">
+    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+    </div>
+</form>
+
+@if (User.Identity.IsAuthenticated)
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <button type="button" class="btn btn-primary" style="position:relative; left:855px;">
+            <i class="fa fa-search"></i><a style="text-decoration:none; color:white;" asp-action="Create" asp-controller="TeacherAdmin">Create</a>
+        </button>
+    }
+}
+<partial name="_SearchPartial" id="partial"></partial>
+
+@section Scripts{
+    <script>
+        function search_teacherAdmin()
+        {
+            var search = document.getElementById("search").value;
+            $.ajax({
+                url: "/TeacherAdmin/Search",
+                data: { "search": search},
+                success: function (result) {
+                    var partialElement = document.getElementById("partial");
+                    if (partialElement !== null) 
+                    {
+                        document.getElementById("partial").innerHTML = result;
+                    }
+                }
+            });
+        }
+       
+
+    </script>
+}
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+
+

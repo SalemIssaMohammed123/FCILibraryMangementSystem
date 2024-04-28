@@ -1,0 +1,53 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Test.ViewModels;
+@model RegisterUserViewModel
+<br /> <br />
+                <@* div class="px-5 ms-xl-4">
+                    <i class="fas fa-crow fa-2x me-3 pt-5 mt-xl-4" style="color: #709085;"></i>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/Home/Assuit_Unversity_Logo2.jpg" alt="FCI Assuit University logo" width="70" height="40" class="rounded-circle" /> <span class="h1 fw-bold mb-0" style="color:black">FCI Library</span></a>
+                </div> *@
+<h2 class="text-center fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Insert Data into Admin Tabel</h2>
+<section class="vh-100">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6 text-black">
+<div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+
+                    <form style="width: 23rem;" asp-action="Create" asp-controller="Admin" method="post"  enctype="multipart/form-data">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+   <br />
+    <partial name="_CreateEditPartial" model=Model></partial>
+  <br /> <div class="pt-1 mb-4">
+                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" style="width: 370px;" type="submit" value="Create">Add Admin</button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+            <div class="col-sm-6 px-0 d-none d-sm-block">
+                <img src="~/Images/Home/adv1.jpg"
+                     alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
+            </div>
+        </div>
+    </div>
+</section>
+<br /> <br />
+<a asp-action="index" asp-controller="Admin" class="btn btn-primary">Back to list</a>
+@section Scripts{
+ <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+ <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+

@@ -1,0 +1,117 @@
+﻿@{
+    var uniqueId = Guid.NewGuid().ToString(); // Generate a unique ID for each cancel button
+}
+
+@section AdvertiseSection {
+
+    <div id="adCarousel_@uniqueId" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="card bg-dark text-white">
+                    <img src="~/Images/Project/adv1.jpg" class="card-img" alt="Ad 1" style="width: 50px; height: 50px;">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">Hello,welcome to our library</h5>
+                        <p class="card-text">This is library for FCI Assuit University.</p>
+                        <p class="card-text">Last updated 3 mins ago</p>
+                        <button id="cancelButton" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item active">
+                <div class="card bg-dark text-white">
+                    <img src="~/Images/Project/adv2.jpg" class="card-img" alt="Ad 2" style="width: 50px; height: 50px;">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">Hello,welcome to our library</h5>
+                        <p class="card-text">This is library for FCI Assuit University.</p>
+                        <p class="card-text">Last updated 3 mins ago</p>
+                        <button id="cancelButton" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item active">
+                <div class="card bg-dark text-white">
+                    <img src="~/Images/Project/adv3.jpg" class="card-img" alt="Ad 3" style="width: 50px; height: 50px;">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">Hello,welcome to our library</h5>
+                        <p class="card-text">This is library for FCI Assuit University.</p>
+                        <p class="card-text">Last updated 3 mins ago</p>
+                        <button id="cancelButton" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item active">
+                <div class="card bg-dark text-white">
+                    <img src="~/Images/Project/adv4.jpg" class="card-img" alt="Ad 4" style="width: 50px; height: 50px;">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">Hello,welcome to our library</h5>
+                        <p class="card-text">This is library for FCI Assuit University.</p>
+                        <p class="card-text">Last updated 3 mins ago</p>
+                        <button id="cancelButton" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item active">
+                <div class="card bg-dark text-white">
+                    <img src="~/Images/Project/adv5.jpg" class="card-img" alt="Ad 5" style="width: 50px; height: 50px;">
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">Hello,welcome to our library</h5>
+                        <p class="card-text">This is library for FCI Assuit University.</p>
+                        <p class="card-text">Last updated 3 mins ago</p>
+                        <button id="cancelButton" class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Add more carousel items for additional ads -->
+        </div>
+        <a class="carousel-control-prev" href="#adCarousel" role="button" data-slide="prev">
+            <!-- Previous control code -->
+        </a>
+        <a class="carousel-control-next" href="#adCarousel" role="button" data-slide="next">
+            <!-- Next control code -->
+        </a>
+    </div>
+
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var carouselInterval_@uniqueId;
+
+        // Start the carousel and set the interval for rotating every 10 seconds
+        $('#adCarousel_@uniqueId').carousel();
+            carouselInterval_@uniqueId = setInterval(function () {
+            nextAd('@uniqueId');
+        }, 10000);
+
+        // Cancel button click event
+        $('#cancelButton_@uniqueId').click(function () {
+            clearInterval(carouselInterval_@uniqueId); // Stop the interval
+            $('#adCarousel_@uniqueId').carousel('pause'); // Pause the carousel
+            $('.carousel-item.active').remove(); // Remove the current ad
+        });
+    });
+
+    // Function to move to the next ad
+    function nextAd(uniqueId) {
+        $('#adCarousel_' + uniqueId).carousel('next');
+    }
+    </script>
+    }
+
+
+@*
+    Important command:
+    The problem lies in the fact that you're using the same id value (cancelButton) for multiple
+    elements in the partial view.
+    The id attribute must be unique within the HTML document.
+    Since you have multiple cancel buttons with the same id,
+    the JavaScript code will only target the first one and not the others.
+
+    In this modified code, a unique ID is generated for each cancel button using Guid.NewGuid().ToString(). This ensures that each cancel button has a unique ID, and the JavaScript code correctly targets the associated carousel and cancel button.
+
+Make sure to update the references to the cancel button's id and the carousel's id within the JavaScript code accordingly.
+
+With this modification, the JavaScript code should work correctly, and the advertisement carousel should function as expected in the partial view.
+
+*@

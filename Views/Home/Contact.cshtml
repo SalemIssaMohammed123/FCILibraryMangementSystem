@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+<br />
+<br />
+<div class="container p-3 my-3 border bg-light text-dark">
+    <h1>@ViewBag.Title <i class="fas fa-heart"></i></h1>
+    <address>
+        FCi Library: <i class="fas fa-thumbs-up"></i> <br />
+        Assuit University<br />
+        <abbr title="Email">Email:</abbr>
+        salem.202701358@compit.aun.edu.eg<br />
+        <abbr title="Phone">Phone:</abbr>
+        01030-694882
+    </address>
+
+    <address>
+        <strong>Support:</strong> <a href="mailto:Support@gmail.com">Support@gmail.com</a><br />
+    </address>
+    <p>Others:</p>
+    <i class="fas fa-cloud"></i>
+    <i class="fas fa-coffee"></i>
+    <i class="fas fa-car"></i>
+    <i class="fas fa-file"></i>
+    <i class="fas fa-bars"></i>
+</div>
+@section AdvertiseSection
+{
+    <partial name="_advertisesSectionPartial"></partial>
+}
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+}

@@ -1,0 +1,17 @@
+﻿@model Departement
+
+<div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
+  <div class="card-header">Departement</div>
+  <div class="card-body">
+    <h5 class="card-title">@Model.DepartementName</h5>
+    <h5 class="card-title">This contains these books:</h5>
+        @{
+            var i = 1;
+        }
+        @foreach(Book book in Model.Books)
+        {
+            <p class="card-text">i+"-"+book.BookTitle</p>
+            i++;
+        }
+  </div>
+</div>

@@ -1,0 +1,13 @@
+﻿@model Book
+
+<div class="container mt-3">
+    <h2>Book Cover</h2>
+    <p>Book exists in the @Model.Departement.DepartementName Departement (FCI_Library):</p>
+    <div class="card" style="width:400px">
+        <img class="card-img-top" src="~/Images/Book/@Model.ImageUrl" alt="Book Cover For @Model.BookTitle" style="width:100%">
+        <div class="card-body">
+            <h4 class="card-title">@Model.BookTitle</h4>
+            <p class="card-text">This book was written by @Model.Author.AuthorName</p>
+            <p class="card-text"> This book has been published by @Model.Publisher.PublisherName</p>
+        </div>
+    </div>
