@@ -27,12 +27,13 @@ namespace Test
             {
                 options.Password.RequiredLength = 8;
             })
-                .AddEntityFrameworkStores<Test.Models.Context>();
+                .AddEntityFrameworkStores<Test.Models.Context>().AddDefaultTokenProviders(); // Register the default token provider;
             //custom services that need to create and register in the IOC container
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
             builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
             builder.Services.AddScoped<IDepartementRepository, DepartementRepository>();
             builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IBorrowRepository, BorrowRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

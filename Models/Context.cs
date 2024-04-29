@@ -9,6 +9,7 @@ namespace Test.Models
         public DbSet<Book> Books { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Departement>Departements { get; set; }
+        public DbSet<BorrowBook> BorrowBooks { get; set; }
         public Context() : base()
         {
         }

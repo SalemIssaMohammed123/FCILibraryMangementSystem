@@ -1,2 +1,5 @@
-﻿body {
+﻿.row col-md-4 text-primary ul {
+    color: red;
+    padding-left: 15px;
+    margin: 0px;
 }

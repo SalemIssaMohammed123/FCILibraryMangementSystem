@@ -7,7 +7,7 @@
 }
 
 @using Test.ViewModels;
-@model RegisterUserViewModel
+@model RegisterUserViewModelForEdit
 <br /> <br />
 <h2 class="text-center fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Edit Data into Teacher Tabel</h2>
 <section class="vh-100">
@@ -18,10 +18,10 @@
 <form asp-action="Edit" asp-controller="Teacher" asp-route-id="@Model.UserId" method="post" enctype="multipart/form-data">
     <div class="mb-3" asp-validation-summary="All"></div>
     <br />
-                        <partial name="_CreateEditPartial" model="Model"></partial>
+                        <partial name="_EditPartial" model="Model"></partial>
                         <br /> 
                         <div class="pt-1 mb-4">
-                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" style="width: 370px;" type="submit" value="Create">Add Teacher</button>
+                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" style="width: 370px;" type="submit" value="Edit">Edit Teacher</button>
                         </div>
                     </form>
 

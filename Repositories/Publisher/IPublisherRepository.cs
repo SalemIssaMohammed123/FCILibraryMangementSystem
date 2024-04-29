@@ -6,6 +6,8 @@
 
         List<Test.Models.Publisher> GetAllAsList();
 
+        List<Test.Models.Book> GetAllBooksAsList(int PublisherID);
+
         IQueryable<Test.Models.Publisher> GetAllUsingSearchWord(string search);
 
         IQueryable<Test.Models.Publisher> GetAllUsingSearchWordAndOrderingWithPublisherName(string search);

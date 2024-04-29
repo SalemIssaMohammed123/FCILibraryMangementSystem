@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Web.Helpers;
+using Test.Models;
 namespace Test.Repositories.Publisher
 {
     public class PublisherRepository : IPublisherRepository
@@ -20,6 +21,10 @@ namespace Test.Repositories.Publisher
             {
                 return Db.Publishers.ToList();
             }
+            public List<Test.Models.Book> GetAllBooksAsList(int PublisherID)
+            {
+                return Db.Books.Where(b => b.PublisherID == PublisherID).ToList();
+            }
         public IQueryable<Test.Models.Publisher> GetAllUsingSearchWord(string search)
             {
                 return Db.Publishers.Include(b => b.Books).Where(p => p.PublisherName.ToUpper().StartsWith(search) || p.Description.ToUpper().StartsWith(search));
@@ -36,23 +41,47 @@ namespace Test.Repositories.Publisher
             {
                 return GetAllUsingSearchWord(search).OrderBy(p => p.ImageUrl);
             }
-            public bool CheckPublisherNameUniqueForEdit(string PublisherName, int PublisherID)
-            {
-                return !Db.Publishers.Any(p => p.PublisherName == PublisherName && p.PublisherID != PublisherID); ;
-            }
-            public bool CheckPublisherNameUniqueForCreate(string PublisherName)
-            {
-                return !Db.Publishers.Any(p => p.PublisherName == PublisherName);
-            }
-            public bool CheckPublisherEmailUniqueForEdit(string Email, int PublisherID)
-            {
-                return Db.Publishers.Any(p => p.Email == Email && p.PublisherID != PublisherID);
-            }
-            public bool CheckPublisherEmailUniqueForCreate(string Email)
-            {
-                return Db.Publishers.Any(p => p.Email == Email);
-            }
-            public Test.Models.Publisher GetById(int id)
+        public bool CheckPublisherNameUniqueForEdit(string PublisherName, int PublisherID)
+        {
+            var existingPublisher = GetById(PublisherID);
+            // Check if the Publisher name is being changed
+            if (existingPublisher.PublisherName == PublisherName)
+                return true;
+            var matchName = Db.Publishers.Where(p => p.PublisherID != PublisherID).FirstOrDefault(p => p.PublisherName == PublisherName);
+            if (matchName == null)
+                return true;
+            else
+                return false;
+        }
+        public bool CheckPublisherNameUniqueForCreate(string PublisherName)
+        {
+            var Publisher = Db.Publishers.FirstOrDefault(p => p.PublisherName == PublisherName);
+            if (Publisher != null)
+                return false;
+            else
+                return true;
+        }
+        public bool CheckPublisherEmailUniqueForEdit(string Email, int PublisherID)
+        {
+            var existingPublisher = GetById(PublisherID);
+            // Check if the Publisher name is being changed
+            if (existingPublisher.Email == Email)
+                return true;
+            var matchName = Db.Publishers.Where(p => p.PublisherID != PublisherID).FirstOrDefault(p => p.Email == Email);
+            if (matchName == null)
+                return true;
+            else
+                return false;
+        }
+        public bool CheckPublisherEmailUniqueForCreate(string Email)
+        {
+            var Publisher = Db.Publishers.FirstOrDefault(p => p.Email == Email);
+            if (Publisher != null)
+                return false;
+            else
+                return true;
+        }
+        public Test.Models.Publisher GetById(int id)
             {
                 return Db.Publishers.FirstOrDefault(p => p.PublisherID == id);
             }

@@ -5,18 +5,19 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model Book
+@using Test.ViewModels
+@model BookViewModel
 <br /> <br />
 <h2 class="text-center">Insert Data into Book Tabel</h2>
 <form asp-action="Create" asp-controller="Book" method="post" enctype="multipart/form-data">
    <div  asp-validation-summary="All" class="text-danger"></div>
    <br />
-    <partial name="_CreateEditPartial1" model=Model></partial>
+    <partial name="_CreatePartial" model=Model></partial>
   <br />
-  <button type="submit" value="Create" class="btn btn-primary">Submit</button>
+  <button type="submit" value="Create" class="btn btn-success">Submit</button>
 </form>
 <br /> <br />
-<a asp-action="index" asp-controller="Book" class="btn btn-primary">Back to list</a>
+<a asp-action="index" asp-controller="Book" class="link-success">Back to list</a>
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial"></partial>

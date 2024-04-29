@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using Test.Models;
 using Test.Repositories.Author;
@@ -130,13 +131,9 @@ namespace Test.Controllers
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         //if new Book the id sent with 0
-        public Microsoft.AspNetCore.Mvc.JsonResult Check_BookISBN_Unique(string ISBN, int BookorID)
+        public Microsoft.AspNetCore.Mvc.JsonResult Check_BookISBN_Unique(string ISBN)
         {
-            //for editting 
-            bool isBookorNameUnique = BookRepo.Check_BookISBN_UniqueForEdit( ISBN, BookorID);// Logic to check if the BookISBN is unique in the database
-            //for new
-            if (BookorID == 0)
-                isBookorNameUnique = BookRepo.Check_BookISBN_UniqueForCreate(ISBN);
+           bool isBookorNameUnique = BookRepo.Check_BookISBN_UniqueForCreate(ISBN);
             if (isBookorNameUnique == true)
                 return Json(true);
             return Json(false);
@@ -149,18 +146,18 @@ namespace Test.Controllers
             LibMangeSys.Publishers = PublishRepo.GetAllAsList();
             LibMangeSys.Departements=DeptRepo.GetAllAsList();
             ViewData["FCI_LibraryMangementSystemViewModel"] = LibMangeSys;
-            return View(new Book());
+            return View(new BookViewModel());
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Book book, IFormFile image)
+        public async Task<IActionResult> Create(BookViewModel BookVM)
         {
-            if (ModelState.IsValid && image != null && image.Length > 0)
+            if (ModelState.IsValid && BookVM.image != null && BookVM.image.Length > 0)
             {
                 try
                 {
                     // Generate a unique filename based on the Book's Title
-                    string fileName = book.BookTitle.ToString() + Path.GetExtension(image.FileName);
+                    string fileName = BookVM.BookTitle.ToString() + Path.GetExtension(BookVM.image.FileName);
 
                     // Set the image path as a combination of a directory and the filename
                     string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Book", fileName);
@@ -168,16 +165,25 @@ namespace Test.Controllers
                     // Save the image to the specified path
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        await image.CopyToAsync(stream);
+                        await BookVM.image.CopyToAsync(stream);
                     }
 
-                    // Update the Book's ImagePath property
-                    book.ImageUrl = fileName;
-
+                    // Update the BookVM's ImagePath property
+                    BookVM.ImageUrl = fileName;
+                    //create object of class Book
+                    Book book = new Book();
+                    book.NoOfPage = BookVM.NoOfPage;
+                    book.BookTitle = BookVM.BookTitle;
+                    book.Count = BookVM.Count;
+                    book.DepartmentID = BookVM.DepartmentID;
+                    book.AuthorID = BookVM.AuthorID;
+                    book.PublisherID = BookVM.PublisherID;
+                    book.ImageUrl = BookVM.ImageUrl;
+                    book.ISBN = BookVM.ISBN;
                     // Save the Book entity to your data store
                     BookRepo.Insert(book);
                 }
-                 catch(Exception ex)
+                 catch(DbUpdateException ex)
                 {
                     ModelState.AddModelError("DepartmentID", "Select the departement for this book");
                     ModelState.AddModelError("AuthorID", "Select the authorName for this book");
@@ -189,14 +195,13 @@ namespace Test.Controllers
             // If no image was selected, return to the view with an error message
             //ModelState.AddModelError("", "Please select an image.");
 
-            else
-            {
+            
                 LibMangeSys.Authors = AuthRepo.GetAllAsList();
                 LibMangeSys.Publishers = PublishRepo.GetAllAsList();
                 LibMangeSys.Departements = DeptRepo.GetAllAsList();
                 ViewData["FCI_LibraryMangementSystemViewModel"] = LibMangeSys;
-                return View(book);
-            }
+                return View(BookVM);
+           
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Edit(int id)
@@ -208,19 +213,29 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the Book is not found
             }
+            BookViewModelForEdit BookVM = new BookViewModelForEdit();
+            BookVM.AuthorID = book.AuthorID;
+            BookVM.PublisherID = book.PublisherID;
+            BookVM.ImageUrl = book.ImageUrl;
+            BookVM.NoOfPage = book.NoOfPage;
+            BookVM.ISBN = book.ISBN;
+            BookVM.DepartmentID = book.DepartmentID;
+            BookVM.Count = book.Count;
+            BookVM.BookID = book.BookID;
+            BookVM.BookTitle = book.BookTitle;
 
             LibMangeSys.Authors = AuthRepo.GetAllAsList();
             LibMangeSys.Publishers = PublishRepo.GetAllAsList();
             LibMangeSys.Departements = DeptRepo.GetAllAsList();
             ViewData["FCI_LibraryMangementSystemViewModel"] = LibMangeSys;
-            return View(book);
+            return View(BookVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Book book, int id, IFormFile image)
+        public async Task<IActionResult> Edit(BookViewModelForEdit BookVM, int id)
         {
             
-                if (ModelState.IsValid && book != null)
+                if (ModelState.IsValid && BookVM != null)
                 {
                    try 
                       {
@@ -232,7 +247,7 @@ namespace Test.Controllers
                         return NotFound(); // Or handle the case when the Bookor is not found
                     }
 
-                    if (image != null && image.Length > 0)
+                    if (BookVM.image != null && BookVM.image.Length > 0)
                     {
                         // Delete the old image if it exists
                         if (!string.IsNullOrEmpty(existingBook.ImageUrl))
@@ -245,28 +260,29 @@ namespace Test.Controllers
                         }
 
                         // Generate a unique filename based on the Bookor's ID
-                        string fileName = book.BookTitle.ToString() + Path.GetExtension(image.FileName);
+                        string fileName = BookVM.BookTitle.ToString() + Path.GetExtension(BookVM.image.FileName);
 
                         // Set the image path as a combination of a directory and the filename
-                        string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Bookor", fileName);
+                        string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Book", fileName);
 
                         // Save the new image to the specified path
                         using (var stream = new FileStream(imagePath, FileMode.Create))
                         {
-                            await image.CopyToAsync(stream);
+                            await BookVM.image.CopyToAsync(stream);
                         }
 
                         // Update the Bookor's ImageUrl property
-                        book.ImageUrl = fileName;
+                        BookVM.ImageUrl = fileName;
+                        existingBook.ImageUrl = BookVM.ImageUrl;
+
                     }
 
                     // Update other properties of the existing Book with the new values
-                    existingBook.BookTitle = book.BookTitle;
-                    existingBook.ISBN = book.ISBN;
-                    existingBook.Count = book.Count;
-                    existingBook.NoOfPage = book.NoOfPage;
-                    existingBook.ImageUrl = book.ImageUrl;
-                    // Update the existing Bookor entity in your data store
+                    existingBook.BookTitle = BookVM.BookTitle;
+                    existingBook.ISBN = BookVM.ISBN;
+                    existingBook.Count = BookVM.Count;
+                    existingBook.NoOfPage = BookVM.NoOfPage;
+                    // Update the existing Book entity in your data store
                     BookRepo.Update(existingBook);
                          }
                    catch (Exception ex)
@@ -285,7 +301,7 @@ namespace Test.Controllers
             LibMangeSys.Departements = DeptRepo.GetAllAsList();
             ViewData["FCI_LibraryMangementSystemViewModel"] = LibMangeSys;
             // If no image was selected or other validation failed, return to the view with the Book model
-            return View(book);
+            return View(BookVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Details(int id)
@@ -297,7 +313,16 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the Book is not found
             }
-
+            BookViewModel BookVM = new BookViewModel();
+            BookVM.AuthorID = book.AuthorID;
+            BookVM.PublisherID = book.PublisherID;
+            BookVM.ImageUrl = book.ImageUrl;
+            BookVM.NoOfPage = book.NoOfPage;
+            BookVM.ISBN = book.ISBN;
+            BookVM.DepartmentID = book.DepartmentID;
+            BookVM.Count = book.Count;
+            BookVM.BookID = book.BookID;
+            BookVM.BookTitle = book.BookTitle;
             return View(book);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -311,6 +336,16 @@ namespace Test.Controllers
                 return NotFound(); // Or handle the case when the Book is not found
             }
 
+            BookViewModel BookVM = new BookViewModel();
+            BookVM.AuthorID = book.AuthorID;
+            BookVM.PublisherID = book.PublisherID;
+            BookVM.ImageUrl = book.ImageUrl;
+            BookVM.NoOfPage = book.NoOfPage;
+            BookVM.ISBN = book.ISBN;
+            BookVM.DepartmentID = book.DepartmentID;
+            BookVM.Count = book.Count;
+            BookVM.BookID = book.BookID;
+            BookVM.BookTitle = book.BookTitle;
             return View(book);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -325,10 +360,20 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the Book is not found
             }
+            BookViewModel BookVM = new BookViewModel();
+            BookVM.AuthorID = book.AuthorID;
+            BookVM.PublisherID = book.PublisherID;
+            BookVM.ImageUrl = book.ImageUrl;
+            BookVM.NoOfPage = book.NoOfPage;
+            BookVM.ISBN = book.ISBN;
+            BookVM.DepartmentID = book.DepartmentID;
+            BookVM.Count = book.Count;
+            BookVM.BookID = book.BookID;
+            BookVM.BookTitle = book.BookTitle;
             // Delete the image if it exists
-            if (!string.IsNullOrEmpty(book.ImageUrl))
+            if (!string.IsNullOrEmpty(BookVM.ImageUrl))
             {
-                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Book", book.ImageUrl);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Book", BookVM.ImageUrl);
                 if (System.IO.File.Exists(imagePath))
                 {
                     System.IO.File.Delete(imagePath);

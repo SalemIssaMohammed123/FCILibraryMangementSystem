@@ -1,4 +1,7 @@
-﻿@model Departement
+﻿@using Test.Repositories.Departement
+@using Test.Models
+@inject IDepartementRepository DeptRepo
+@model Departement
 
 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
   <div class="card-header">Departement</div>
@@ -8,9 +11,9 @@
         @{
             var i = 1;
         }
-        @foreach(Book book in Model.Books)
+        @foreach(Book book in DeptRepo.GetAllBooksAsList(Model.DepartementID))
         {
-            <p class="card-text">i+"-"+book.BookTitle</p>
+            <p class="card-text">@i-@book.BookTitle</p>
             i++;
         }
   </div>

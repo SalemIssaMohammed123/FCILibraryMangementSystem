@@ -6,6 +6,7 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using Test.ViewModels
 @model Publisher
 <br /> <br />
 <h2 class="text-center">Delete Publisher</h2>
@@ -18,7 +19,7 @@
   <button type="submit" value="Delete" class="btn btn-default">Delete</button>
   </form>
 <br />
-<a asp-action="index" asp-controller="Publisher" class="btn btn-primary">Back to list</a>
+<a href="/Publisher/index" class="link-success">Back to list</a>
 @section AdvertiseSection
 {
     <partial name="_advertisesSectionPartial"></partial>

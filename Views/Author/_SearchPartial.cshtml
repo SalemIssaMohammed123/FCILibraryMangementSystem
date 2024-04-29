@@ -4,9 +4,10 @@
             <tr>
                 <th scope="col">AuthorName</th>
                 <th scope="col">Description</th>
-                <th scope="col">Image</th>
+                <th scope="col" >Image</th>
                 <th scope="col">AuthorEmail</th>
                 <th scope="col">Books</th>
+                <th scope="col">Operations</th>
 
             </tr>
         </thead>
@@ -14,11 +15,11 @@
             @foreach (Author a in (@List<Author>)ViewData["paginatedList"])
             {
                 <tr>
-                    <td class="table-primary">@a.AuthorName</td>
-                    <td class="table-secondary">@a.DescripTion</td>
-                    <td class="table-success"><img src="~/Images/Author/@a.ImageUrl" width="150" height="150" /></td>
-                    <td class="table-danger">@a.Email</td>
-                    <td class="table-danger">
+                    <td class="table-info">@a.AuthorName</td>
+                    <td class="table-info">@a.DescripTion</td>
+                    <td class="table-light"><img src="~/Images/Author/@a.ImageUrl" width="150" height="150" /></td>
+                    <td class="table-dark">@a.Email</td>
+                    <td class="bg-info">
                         @foreach(Book b in a.Books)
                         {
                             @b.BookTitle
@@ -32,23 +33,24 @@
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <td>
-                                <a asp-action="Edit" asp-controller="Author" asp-route="@a.AuthorID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Edit</a>
-                                <a asp-action="Details" asp-controller="Author" asp-route="@a.AuthorID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
-                                <a asp-action="Delete" asp-controller="Author" asp-route="@a.AuthorID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Delete</a>
+                            <td class="bg-danger">
+
+                                <a href="/Author/Edit/@a.AuthorID" class="link-success" style="display:block;">Edit</a>
+                                <a href="/Author/Details/@a.AuthorID" class="link-success" style="display:block;">Details</a>
+                                <a href="/Author/Delete/@a.AuthorID" class="link-success" style="display:block;">Delete</a>
                             </td>
                         }
                         @if (User.IsInRole("Teacher"))
                         {
-                            <td>
-                                <a asp-action="Edit" asp-controller="Author" asp-route="@a.AuthorID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Edit</a>
-                                <a asp-action="Details" asp-controller="Author" asp-route="@a.AuthorID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
+                            <td class="bg-danger">
+                                <a href="/Author/Edit/@a.AuthorID" class="link-success" style="display:block;">Edit</a>
+                                <a href="/Author/Details/@a.AuthorID" class="link-success" style="display:block;">Details</a>
                             </td>
                         }
                         @if (User.IsInRole("Student"))
                         {
-                            <td>
-                                <a asp-action="Details" asp-controller="Author" asp-route="@a.AuthorID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
+                            <td class="bg-info">
+                                <a href="/Author/Details/@a.AuthorID" class="link-success" style="display:block;">Details</a>
                             </td>
                         }
                     }

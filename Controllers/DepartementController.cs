@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Test.Models;
 using Test.Repositories.Departement;
+using Test.ViewModels;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Test.Controllers
@@ -70,13 +71,10 @@ namespace Test.Controllers
             return PartialView("_SearchPartial");
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public Microsoft.AspNetCore.Mvc.JsonResult CheckDepartementNameUnique(string DepartementName, int DepartementID)
+        public Microsoft.AspNetCore.Mvc.JsonResult CheckDepartementNameUnique(string DepartementName)
         {
-            //for editting 
-            bool isDepartementNameUnique = DeptRepo.CheckDepartementNameUniqueForEdit(DepartementName, DepartementID);// Logic to check if the DepartementName is unique in the database
-            //for new
-            if (DepartementID == 0)
-                isDepartementNameUnique = DeptRepo.CheckDepartementNameUniqueForCreate(DepartementName);
+            
+            bool  isDepartementNameUnique = DeptRepo.CheckDepartementNameUniqueForCreate(DepartementName);
             if (isDepartementNameUnique == true)
                 return Json(true);
             return Json(false);
@@ -85,14 +83,16 @@ namespace Test.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Create()
         {
-            return View(new Departement());
+            return View(new DepartementViewModel());
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Departement departement)
+        public IActionResult Create(DepartementViewModel departementVM)
         {
             if (ModelState.IsValid)
             {
+                Departement departement = new Departement();
+                departement.DepartementName = departementVM.DepartementName;
                 // Save the departement entity to your data store
                DeptRepo.Insert(departement);
 
@@ -101,7 +101,7 @@ namespace Test.Controllers
             }
             else
             {
-                return View(departement);
+                return View(departementVM);
             }
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -114,14 +114,16 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the departement is not found
             }
-
-            return View(departement);
+            DepartementViewModelForEdit departementVM = new DepartementViewModelForEdit();
+            departementVM.DepartementID =departement.DepartementID;
+            departementVM.DepartementName = departement.DepartementName.Trim();
+            return View(departementVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Departement departement, int id)
+        public async Task<IActionResult> Edit(DepartementViewModelForEdit departementVM, int id)
         {
-            if (ModelState.IsValid && departement != null)
+            if (ModelState.IsValid && departementVM != null)
             {
                 // Retrieve the existing departement entity from your data store based on the Publisher's ID
                 Departement existingDepartement = DeptRepo.GetById(id);
@@ -131,7 +133,7 @@ namespace Test.Controllers
                     return NotFound(); // Or handle the case when the Publisher is not found
                 }
                 // Update other properties of the existing Publisher with the new values
-                existingDepartement.DepartementName = departement.DepartementName;
+                existingDepartement.DepartementName = departementVM.DepartementName;
                 // Update other properties as needed
 
                 // Update the existing departement entity in your data store
@@ -141,7 +143,7 @@ namespace Test.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(departement);
+            return View(departementVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Details(int id)
@@ -153,7 +155,9 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the departement is not found
             }
-
+            DepartementViewModel departementVM = new DepartementViewModel();
+            departementVM.DepartementID = departement.DepartementID;
+            departementVM.DepartementName = departement.DepartementName;
             return View(departement);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -167,6 +171,9 @@ namespace Test.Controllers
                 return NotFound(); // Or handle the case when the departement is not found
             }
 
+            DepartementViewModel departementVM = new DepartementViewModel();
+            departementVM.DepartementID = departement.DepartementID;
+            departementVM.DepartementName = departement.DepartementName;
             return View(departement);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -181,7 +188,9 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the departement is not found
             }
-
+            DepartementViewModel departementVM = new DepartementViewModel();
+            departementVM.DepartementID = departement.DepartementID;
+            departementVM.DepartementName = departement.DepartementName;
             // Remove the departement entity from the data store
             DeptRepo.Delete(departement);
             return RedirectToAction("Index");

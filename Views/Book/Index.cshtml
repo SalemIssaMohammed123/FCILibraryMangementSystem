@@ -52,9 +52,9 @@
 {
     @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
     {
-        <button type="button" class="btn btn-primary" style="position:relative; left:855px;">
-            <i class="fa fa-search"></i><a style="text-decoration:none; color:white;" asp-action="Create" asp-controller="Book">Create</a>
-        </button>
+        <a href="/Book/Create" class="link-success" style="position:relative; left:855px;">
+            Create
+        </a>
     }
 }
 <partial name="_SearchPartial" id="partial"></partial>
