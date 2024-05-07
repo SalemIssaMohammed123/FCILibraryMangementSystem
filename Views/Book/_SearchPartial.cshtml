@@ -1,29 +1,57 @@
-﻿<div class="table-responsive-sm">
+﻿@using Test.Repositories.Book
+@inject IBookRepository BookRepo
+<div class="table-responsive-sm">
     <table class="table table-hover table-light">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">BookCover</th>
-                <th scope="col">BookID</th>
                 <th scope="col">BookTitle</th>
-                <th scope="col">Amount of available books for this book</th>
                 <th scope="col">The Number Of Pages</th>
+                <th scope="col">Amount of available books for this book</th>
                 <th scope="col">DepartementName that this book exists</th>
                 <th scope="col">AuthorName that wrote this book</th>
                 <th scope="col">PublisherName that Published this book</th>
+                <th scope="col">Operations</th>
             </tr>
         </thead>
         <tbody>
             @foreach (Book b in (@List<Book>)ViewData["paginatedList"])
             {
+
+
                 <tr>
-                    <td class="table-success"><img src="~/Images/Book/@b.ImageUrl" width="150" height="150" /></td>
-                    <td class="table-active">@b.BookID</td>
-                    <td class="table-primary">@b.BookTitle</td>
-                    <td class="table-secondary">@b.Count</td>
-                    <td class="table-danger">@b.NoOfPage</td>
-                    <td class="table-danger">@b.Departement.DepartementName</td>
-                    <td class="table-danger">@b.Author.AuthorName</td>
-                    <td class="table-danger">@b.Publisher.PublisherName</td>
+                    <td class="table-light"><img src="~/Images/Book/@b.ImageUrl" width="150" height="150" /></td>
+                    <td class="table-info">@b.BookTitle</td>
+                    <td class="table-info">@b.NoOfPage</td>
+                    <td class="bg-info">@b.Count</td>
+                    <td class="bg-success">@BookRepo.GetDepartementNameByID(@b.DepartmentID)</td>
+                    <td class="bg-success">@BookRepo.GetAuthorNameByID(@b.AuthorID)</td>
+                    <td class="bg-success">@BookRepo.GetPublisherNameByID(@b.PublisherID)</td>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="bg-danger">
+
+                                <a href="/Book/Edit/@b.BookID" class="link-success" style="display:block;">Edit</a>
+                                <a href="/Book/Details/@b.BookID" class="link-success" style="display:block;">Details</a>
+                                <a href="/Book/Delete/@b.BookID" class="link-success" style="display:block;">Delete</a>
+                            </td>
+                        }
+                        @if (User.IsInRole("Teacher"))
+                        {
+                            <td class="bg-danger">
+                                <a href="/Book/Edit/@b.BookID" class="link-success" style="display:block;">Edit</a>
+                                <a href="/Book/Details/@b.BookID" class="link-success" style="display:block;">Details</a>
+                            </td>
+                        }
+                        @if (User.IsInRole("Student"))
+                        {
+                            <td class="bg-info">
+                                <a href="/Book/Details/@b.BookID" class="link-success" style="display:block;">Details</a>
+                            </td>
+                        }
+                    }
                     @*There exist code we write untill we reach the identity  the links of users and the admin should
                 maintain and the user outside the system the links excepected on one row
                 *@

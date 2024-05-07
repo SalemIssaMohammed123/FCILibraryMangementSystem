@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Test.Models;
 using Test.Repositories.Publisher;
-
+using Test.ViewModels;
 namespace Test.Controllers
 {
     public class PublisherController : Controller
@@ -117,27 +117,20 @@ namespace Test.Controllers
             return PartialView("_SearchPartial");
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public Microsoft.AspNetCore.Mvc.JsonResult CheckPublisherNameUnique(string PublisherName, int PublisherID)
+        public Microsoft.AspNetCore.Mvc.JsonResult CheckPublisherNameUnique(string PublisherName)
         {
-            //for editting 
-            bool isPublisherNameUnique = PublishRepo.CheckPublisherNameUniqueForEdit(PublisherName, PublisherID);// Logic to check if the PublisherName is unique in the database
-            //for new
-            if (PublisherID == 0)
-                isPublisherNameUnique = PublishRepo.CheckPublisherNameUniqueForCreate(PublisherName);
+           
+            bool   isPublisherNameUnique = PublishRepo.CheckPublisherNameUniqueForCreate(PublisherName);
             if (isPublisherNameUnique == true)
                 return Json(true);
             return Json(false);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        //if new Publisher the id sent with 0
-        public Microsoft.AspNetCore.Mvc.JsonResult CheckPublisherEmailUnique(string Email, int PublisherID)
+        public Microsoft.AspNetCore.Mvc.JsonResult CheckPublisherEmailUnique(string Email)
         {
-            //for editting 
-            bool isPublisherEmailUnique = PublishRepo.CheckPublisherEmailUniqueForEdit(Email, PublisherID); ;
-            //for new
-            if (PublisherID == 0)
-                isPublisherEmailUnique = PublishRepo.CheckPublisherEmailUniqueForCreate(Email);
-            if (!isPublisherEmailUnique)
+            
+             bool isPublisherEmailUnique = PublishRepo.CheckPublisherEmailUniqueForCreate(Email);
+            if (isPublisherEmailUnique)
                 return Json(true);
             return Json(false);
         }
@@ -146,17 +139,17 @@ namespace Test.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Create()
         {
-            return View(new Publisher());
+            return View(new PublisherViewModel());
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Publisher publisher, IFormFile image)
+        public async Task<IActionResult> Create(PublisherViewModel publisherVM)
         {
-            if (ModelState.IsValid && image != null && image.Length > 0)
+            if (ModelState.IsValid && publisherVM.image != null && publisherVM.image.Length > 0)
             {
 
                 // Generate a unique filename based on the person's ID
-                string fileName = publisher.PublisherName.ToString() + Path.GetExtension(image.FileName);
+                string fileName = publisherVM.PublisherName.ToString() + Path.GetExtension(publisherVM.image.FileName);
 
                 // Set the image path as a combination of a directory and the filename
                 string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Publisher", fileName);
@@ -164,12 +157,16 @@ namespace Test.Controllers
                 // Save the image to the specified path
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(stream);
+                    await publisherVM.image.CopyToAsync(stream);
                 }
 
+                publisherVM.ImgUrl = fileName;
+                Publisher publisher = new Publisher();
+                publisher.PublisherName = publisherVM.PublisherName;
+                publisher.Description = publisherVM.Description;
+                publisher.Email = publisherVM.Email;
                 // Update the Publisher's ImagePath property
                 publisher.ImageUrl = fileName;
-
                 // Save the Publisher entity to your data store
                 PublishRepo.Insert(publisher);
 
@@ -182,7 +179,7 @@ namespace Test.Controllers
 
             else
             {
-                return View(publisher);
+                return View(publisherVM);
             }
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -195,14 +192,20 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the publisher is not found
             }
-
-            return View(publisher);
+            PublisherViewModelForEdit publisherVM= new PublisherViewModelForEdit();
+            publisherVM.PublisherID = publisher.PublisherID;
+            publisherVM.PublisherName = publisher.PublisherName;
+            publisherVM.Description = publisher.Description;
+            publisherVM.Email = publisher.Email;
+            publisherVM.ImgUrl = publisher.ImageUrl;
+            return View(publisherVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Publisher publisher, int id, IFormFile image)
+        public async Task<IActionResult> Edit(PublisherViewModelForEdit publisherVM,int id)
         {
-            if (ModelState.IsValid && publisher != null)
+            string newFileName = null;
+            if (ModelState.IsValid && publisherVM != null)
             {
                 // Retrieve the existing Publisher entity from your data store based on the Publisher's ID
                 Publisher existingPublisher = PublishRepo.GetById(id);
@@ -212,7 +215,7 @@ namespace Test.Controllers
                     return NotFound(); // Or handle the case when the Publisher is not found
                 }
 
-                if (image != null && image.Length > 0)
+                if (publisherVM.image != null && publisherVM.image.Length > 0)
                 {
                     // Delete the old image if it exists
                     if (!string.IsNullOrEmpty(existingPublisher.ImageUrl))
@@ -225,7 +228,7 @@ namespace Test.Controllers
                     }
 
                     // Generate a unique filename based on the Publisher's ID
-                    string fileName = publisher.PublisherName.ToString() + Path.GetExtension(image.FileName);
+                    string fileName = publisherVM.PublisherName.ToString() + Path.GetExtension(publisherVM.image.FileName);
 
                     // Set the image path as a combination of a directory and the filename
                     string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Publisher", fileName);
@@ -233,18 +236,19 @@ namespace Test.Controllers
                     // Save the new image to the specified path
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        await image.CopyToAsync(stream);
+                        await publisherVM.image.CopyToAsync(stream);
                     }
 
                     // Update the Publisher's ImageUrl property
-                    publisher.ImageUrl = fileName;
+                    newFileName = fileName;
+                    existingPublisher.ImageUrl = newFileName;
+
                 }
 
                 // Update other properties of the existing Publisher with the new values
-                existingPublisher.PublisherName = publisher.PublisherName;
-                existingPublisher.Description = publisher.Description;
-                existingPublisher.Email = publisher.Email;
-                existingPublisher.ImageUrl= publisher.ImageUrl;
+                existingPublisher.PublisherName = publisherVM.PublisherName;
+                existingPublisher.Description = publisherVM.Description;
+                existingPublisher.Email = publisherVM.Email;
                 // Update the existing Publisher entity in your data store
                PublishRepo.Update(existingPublisher);
 
@@ -253,7 +257,7 @@ namespace Test.Controllers
             }
 
             // If no image was selected or other validation failed, return to the view with the publisher model
-            return View(publisher);
+            return View(publisherVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Details(int id)
@@ -266,6 +270,12 @@ namespace Test.Controllers
                 return NotFound(); // Or handle the case when the publisher is not found
             }
 
+            PublisherViewModel publisherVM = new PublisherViewModel();
+            publisherVM.PublisherID = publisher.PublisherID;
+            publisherVM.PublisherName = publisher.PublisherName;
+            publisherVM.Description = publisher.Description;
+            publisherVM.Email = publisher.Email;
+            publisherVM.ImgUrl = publisher.ImageUrl;
             return View(publisher);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -279,6 +289,12 @@ namespace Test.Controllers
                 return NotFound(); // Or handle the case when the publisher is not found
             }
 
+            PublisherViewModel publisherVM = new PublisherViewModel();
+            publisherVM.PublisherID = publisher.PublisherID;
+            publisherVM.PublisherName = publisher.PublisherName;
+            publisherVM.Description = publisher.Description;
+            publisherVM.Email = publisher.Email;
+            publisherVM.ImgUrl = publisher.ImageUrl;
             return View(publisher);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -293,11 +309,16 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the publisher is not found
             }
-
+            PublisherViewModel publisherVM = new PublisherViewModel();
+            publisherVM.PublisherID = publisher.PublisherID;
+            publisherVM.PublisherName = publisher.PublisherName;
+            publisherVM.Description = publisher.Description;
+            publisherVM.Email = publisher.Email;
+            publisherVM.ImgUrl = publisher.ImageUrl;
             // Delete the image if it exists
             if (!string.IsNullOrEmpty(publisher.ImageUrl))
             {
-                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Publisher", publisher.ImageUrl);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Publisher", publisherVM.ImgUrl);
                 if (System.IO.File.Exists(imagePath))
                 {
                     System.IO.File.Delete(imagePath);

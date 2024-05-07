@@ -5,13 +5,14 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model Departement
+@using Test.ViewModels
+@model DepartementViewModel
 <br /> <br />
 <h2 class="text-center">Insert Data into Departement Tabel</h2>
 <form asp-action="Create" asp-controller="Departement" method="post">
    <div  asp-validation-summary="All" class="text-danger"></div>
    <br />
-    <partial name="_CreateEditPartial" model=Model></partial>
+    <partial name="_CreatePartial" model=Model></partial>
   <br />
   <button type="submit" value="Create" class="btn btn-primary">Submit</button>
 </form>

@@ -246,13 +246,11 @@ namespace Test.Migrations
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescripTion")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -280,13 +278,9 @@ namespace Test.Migrations
 
                     b.Property<string>("BookTitle")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DepartementID")
+                    b.Property<int?>("Count")
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentID")
@@ -310,7 +304,7 @@ namespace Test.Migrations
 
                     b.HasIndex("AuthorID");
 
-                    b.HasIndex("DepartementID");
+                    b.HasIndex("DepartmentID");
 
                     b.HasIndex("PublisherID");
 
@@ -360,8 +354,7 @@ namespace Test.Migrations
 
                     b.Property<string>("DepartementName")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DepartementID");
 
@@ -378,8 +371,7 @@ namespace Test.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -391,8 +383,7 @@ namespace Test.Migrations
 
                     b.Property<string>("PublisherName")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PublisherID");
 
@@ -488,7 +479,7 @@ namespace Test.Migrations
 
                     b.HasOne("Test.Models.Departement", "Departement")
                         .WithMany("Books")
-                        .HasForeignKey("DepartementID")
+                        .HasForeignKey("DepartmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Web.Helpers;
+using Test.Models;
 
 namespace Test.Repositories.Author
 {
@@ -20,7 +21,11 @@ namespace Test.Repositories.Author
         {
             return Db.Authors.Include(b => b.Books).ToList();
         }
-      public IQueryable<Test.Models.Author> GetAllUsingSearchWord(string search)
+        public List<Test.Models.Book> GetAllBooksAsList(int AuthorID)
+        {
+            return Db.Books.Where(b=>b.AuthorID == AuthorID).ToList();
+        }
+        public IQueryable<Test.Models.Author> GetAllUsingSearchWord(string search)
         {
             return Db.Authors.Include(b => b.Books).Where(a => a.AuthorName.ToUpper().StartsWith(search) || a.DescripTion.ToUpper().StartsWith(search));
         }
@@ -38,19 +43,45 @@ namespace Test.Repositories.Author
         }
         public bool CheckAuthorNameUniqueForEdit(string AuthorName, int AuthorID)
         {
-            return !Db.Authors.Any(a => a.AuthorName == AuthorName && a.AuthorID != AuthorID); ;
+
+            var existingAuthor = GetById(AuthorID);
+            // Check if the author name is being changed
+            if (existingAuthor.AuthorName == AuthorName)
+                return true;
+            var matchName = Db.Authors.Where(a=>a.AuthorID!=AuthorID).FirstOrDefault(a => a.AuthorName == AuthorName);
+                if (matchName == null)
+                    return true;
+                else
+                    return false;
         }
         public bool CheckAuthorNameUniqueForCreate(string AuthorName)
         {
-            return !Db.Authors.Any(a => a.AuthorName == AuthorName);
+
+            var author = Db.Authors.FirstOrDefault(a => a.AuthorName == AuthorName);
+            if (author != null)
+                return false;
+            else
+                return true;
         }
         public bool CheckAuthorEmailUniqueForEdit(string Email, int AuthorID)
         {
-            return Db.Authors.Any(a => a.Email == Email && a.AuthorID != AuthorID);
+            var existingAuthor = GetById(AuthorID);
+            // Check if the author name is being changed
+            if (existingAuthor.Email == Email)
+                return true;
+                var matchName = Db.Authors.Where(a => a.AuthorID != AuthorID).FirstOrDefault(a => a.Email == Email);
+                if (matchName == null)
+                return true;
+            else
+                return false;
         }
         public bool CheckAuthorEmailUniqueForCreate(string Email)
         {
-            return Db.Authors.Any(a => a.Email == Email);
+            var author = Db.Authors.FirstOrDefault(a => a.Email == Email);
+            if (author != null)
+                return false;
+            else
+                return true;
         }
         public Test.Models.Author GetById(int id)
         {

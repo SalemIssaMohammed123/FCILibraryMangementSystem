@@ -7,19 +7,18 @@
                 <th scope="col">Image</th>
                 <th scope="col">PublisherEmail</th>
                 <th scope="col">Books</th>
+                <th scope="col">Operations</th>
             </tr>
         </thead>
         <tbody>
             @foreach (Publisher p in (@List<Publisher>)ViewData["paginatedList"])
             {
                 <tr>
-                    <td class="table-active">@p.PublisherID</td>
-
-                    <td class="table-primary">@p.PublisherName</td>
-                    <td class="table-secondary">@p.Description</td>
-                    <td class="table-success"><img src="~/Images/Publisher/" width="150" height="150" /></td>
-                    <td class="table-danger">@p.Email</td>
-                    <td class="table-danger">
+                    <td class="table-info">@p.PublisherName</td>
+                    <td class="table-info">@p.Description</td>
+                    <td class="table-light"><img src="~/Images/Publisher/@p.ImageUrl" width="150" height="150" /></td>
+                    <td class="table-dark">@p.Email</td>
+                    <td class="bg-info">
                         @foreach (Book b in p.Books)
                         {
                             @b.BookTitle
@@ -33,23 +32,24 @@
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <td>
-                                <a asp-action="Edit" asp-controller="Publisher" asp-route="@p.PublisherID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Edit</a>
-                                <a asp-action="Details" asp-controller="Publisher" asp-route="@p.PublisherID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
-                                <a asp-action="Delete" asp-controller="Publisher" asp-route="@p.PublisherID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Delete</a>
+                            <td class="bg-danger">
+
+                                <a href="/Publisher/Edit/@p.PublisherID" class="link-success" style="display:block;">Edit</a>
+                                <a href="/Publisher/Details/@p.PublisherID" class="link-success" style="display:block;">Details</a>
+                                <a href="/Publisher/Delete/@p.PublisherID" class="link-success" style="display:block;">Delete</a>
                             </td>
                         }
                         @if (User.IsInRole("Teacher"))
                         {
-                            <td>
-                                <a asp-action="Edit" asp-controller="Publisher" asp-route="@p.PublisherID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Edit</a>
-                                <a asp-action="Details" asp-controller="Publisher" asp-route="@p.PublisherID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
+                            <td class="bg-danger">
+                                <a href="/Publisher/Edit/@p.PublisherID" class="link-success" style="display:block;">Edit</a>
+                                <a href="/Publisher/Details/@p.PublisherID" class="link-success" style="display:block;">Details</a>
                             </td>
                         }
                         @if (User.IsInRole("Student"))
                         {
-                            <td>
-                                <a asp-action="Details" asp-controller="Publisher" asp-route="@p.PublisherID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
+                            <td class="bg-info">
+                                <a href="/Publisher/Details/@p.PublisherID" class="link-success" style="display:block;">Details</a>
                             </td>
                         }
                     }

@@ -2,21 +2,22 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model Author
+@using Test.ViewModels
+@model AuthorViewModelForEdit
 <br /> <br />
 <h2 class="text-center">Edit Data into Author Tabel</h2>
 <form asp-action="Edit" asp-controller="Author" asp-route-id="@Model.AuthorID" method="post" enctype="multipart/form-data">
-    <div class="mb-3" asp-validation-summary="All"></div>
+    <div class="text-danger" asp-validation-summary="All"></div>
     <br />
-    <partial name="_CreateEditPartial" model="Model"></partial>
+    <partial name="_EditPartial" model=Model></partial>
     <br />
-    <button type="submit" value="Edit" class="btn btn-primary">Submit</button>
+    <button type="submit" value="Edit" class="btn btn-primary">Save</button>
 </form>
 <br /> <br />
-<a asp-action="index" asp-controller="Author" class="btn btn-primary">Back to list</a>
+<a asp-action="index" asp-controller="Author" class="link-primary">Back to list</a>
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial"></partial>

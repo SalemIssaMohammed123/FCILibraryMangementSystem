@@ -12,9 +12,15 @@ namespace Test.Models
 
         public string ImageUrl { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+<<<<<<< HEAD
         public virtual ICollection<BorrowBook> BorrowedBooks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReportForBook> ReportedBook { get; set; }
+=======
+        public virtual ICollection<Book>? BorrowedBooks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportForBook>? ReportedBook { get; set; }
+>>>>>>> parent of e5f991c (LibraryMangementSystem for FCI)
 
     }
 }

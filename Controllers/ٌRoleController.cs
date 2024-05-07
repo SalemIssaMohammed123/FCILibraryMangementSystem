@@ -6,7 +6,7 @@ using Test.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 namespace Test.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    //[Authorize(Roles ="Admin")]
     public class RoleController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;

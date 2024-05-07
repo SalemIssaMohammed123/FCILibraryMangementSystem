@@ -7,27 +7,28 @@
                 <th scope="col">TeacherAdminLastName</th>
                 <th scope="col">TeacherAdminAddress</th>
                 <th scope="col">TeacherAdminImage</th>
+                <th scope="col">Operations</th>
             </tr>
         </thead>
         <tbody>
             @foreach (ApplicationUser user in (@List<ApplicationUser>)ViewData["paginatedList"])
             {
                 <tr>
-                    <td class="table-active">@user.UserName</td>
-                    <td class="table-primary">@user.FirstName</td>
-                    <td class="table-secondary">@user.LastName</td>
-                    <td class="table-primary">@user.Address</td>
-                    <td class="table-success"><img src="~/Images/TeacherAdmin/@user.ImageUrl" width="150" height="150" /></td>
+                    <td class="table-warning">@user.UserName</td>
+                    <td class="table-info">@user.FirstName</td>
+                    <td class="table-info">@user.LastName</td>
+                    <td class="bg-warning">@user.Address</td>
+                    <td class="table-light"><img src="~/Images/TeacherAdmin/@user.ImageUrl" width="150" height="150" /></td>
                     @{
                         var parms = new Dictionary<string, string>
                 {
                 { "id", user.Id }
                 };
                     }
-                    <td>
-                        <a asp-action="Edit" asp-controller="TeacherAdmin" asp-all-route-data="parms" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>></a>
-                        <a asp-action="Details" asp-controller="TeacherAdmin" asp-all-route-data="parms" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>></a>
-                        <a asp-action="Delete" asp-controller="TeacherAdmin" asp-all-route-data="parms" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>></a>
+                    <td class="bg-danger">
+                        <a asp-action="Edit" asp-controller="TeacherAdmin" asp-all-route-data="parms" class="link-success" style="display:block;">Edit</a>
+                        <a asp-action="Details" asp-controller="TeacherAdmin" asp-all-route-data="parms" class="link-success" style="display:block;">Details</a>
+                        <a asp-action="Delete" asp-controller="TeacherAdmin" asp-all-route-data="parms" class="link-success" style="display:block;">Delete</a>
                     </td>
                     @*There exist code we write untill we reach the identity  the links of users and the Admin should
                 maintain and the user outside the system the links excepected on one row

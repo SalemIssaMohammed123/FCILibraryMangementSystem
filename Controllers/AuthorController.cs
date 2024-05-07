@@ -2,6 +2,7 @@
 using System.Web.Helpers;
 using System.Web.Mvc;
 using Test.Models;
+using Test.ViewModels;
 using Test.Repositories.Author;
 namespace Test.Controllers
 {
@@ -118,27 +119,18 @@ namespace Test.Controllers
             return PartialView("_SearchPartial") ;
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public Microsoft.AspNetCore.Mvc.JsonResult CheckAuthorNameUnique(string AuthorName, int AuthorID)
+        public Microsoft.AspNetCore.Mvc.JsonResult CheckAuthorNameUnique(string AuthorName)
         {
-            //for editting 
-            bool isAuthorNameUnique = AuthRepo.CheckAuthorNameUniqueForEdit(AuthorName, AuthorID);// Logic to check if the AuthorName is unique in the database
-            //for new
-            if (AuthorID == 0)
-                isAuthorNameUnique = AuthRepo.CheckAuthorNameUniqueForCreate(AuthorName);
+                bool isAuthorNameUnique = AuthRepo.CheckAuthorNameUniqueForCreate(AuthorName);
             if (isAuthorNameUnique == true)
                 return Json(true);
             return Json(false);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        //if new Author the id sent with 0
-        public Microsoft.AspNetCore.Mvc.JsonResult CheckAuthorEmailUnique(string Email, int AuthorID)
+        public Microsoft.AspNetCore.Mvc.JsonResult CheckAuthorEmailUnique(string Email)
         {
-            //for editting 
-            bool isAuthorEmailUnique = AuthRepo.CheckAuthorEmailUniqueForEdit(Email, AuthorID); ;
-            //for new
-            if (AuthorID == 0)
-                isAuthorEmailUnique = AuthRepo.CheckAuthorEmailUniqueForCreate(Email);
-            if (!isAuthorEmailUnique)
+                bool isAuthorEmailUnique = AuthRepo.CheckAuthorEmailUniqueForCreate(Email);
+            if (isAuthorEmailUnique)
                 return Json(true);
             return Json(false);
         }
@@ -147,17 +139,17 @@ namespace Test.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Create()
         {
-            return View(new Author());
+            return View(new AuthorViewModel());
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Author author, IFormFile image)
+        public async Task<IActionResult> Create(AuthorViewModel authorVM)
         {
-            if (ModelState.IsValid&& image != null && image.Length > 0)
+            if (ModelState.IsValid&& authorVM.image != null && authorVM.image.Length > 0)
             {
 
                 // Generate a unique filename based on the person's ID
-                string fileName = author.AuthorName.ToString() + Path.GetExtension(image.FileName);
+                string fileName = authorVM.AuthorName.ToString() + Path.GetExtension(authorVM.image.FileName);
 
                 // Set the image path as a combination of a directory and the filename
                 string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Author", fileName);
@@ -165,9 +157,12 @@ namespace Test.Controllers
                 // Save the image to the specified path
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(stream);
+                    await authorVM.image.CopyToAsync(stream);
                 }
-
+                Author author = new Author();
+                author.AuthorName = authorVM.AuthorName;
+                author.DescripTion = authorVM.DescripTion;
+                author.Email= authorVM.Email;
                 // Update the Author's ImagePath property
                 author.ImageUrl = fileName;
 
@@ -183,7 +178,7 @@ namespace Test.Controllers
 
             else
             {
-                return View(author);
+                return View(authorVM);
             }
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -196,14 +191,20 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the Author is not found
             }
-
-            return View(author);
+            AuthorViewModelForEdit authorVM = new AuthorViewModelForEdit();
+            authorVM.AuthorID = author.AuthorID;
+            authorVM.AuthorName= author.AuthorName;
+            authorVM.DescripTion= author.DescripTion;
+            authorVM.Email= author.Email;
+            authorVM.ImgUrl = author.ImageUrl;
+            return View(authorVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Author author,int id, IFormFile image)
+        public async Task<IActionResult> Edit(AuthorViewModelForEdit authorVM,int id)
         {
-            if (ModelState.IsValid && author != null)
+            string newFileName =null;
+            if (ModelState.IsValid && authorVM != null)
             {
                 // Retrieve the existing Author entity from your data store based on the Author's ID
                 Author existingAuthor = AuthRepo.GetById(id);
@@ -213,7 +214,8 @@ namespace Test.Controllers
                     return NotFound(); // Or handle the case when the Author is not found
                 }
 
-                if (image != null && image.Length > 0)
+
+                if (authorVM.image != null && authorVM.image.Length > 0)
                 {
                     // Delete the old image if it exists
                     if (!string.IsNullOrEmpty(existingAuthor.ImageUrl))
@@ -226,7 +228,7 @@ namespace Test.Controllers
                     }
 
                     // Generate a unique filename based on the Author's ID
-                    string fileName = author.AuthorName.ToString() + Path.GetExtension(image.FileName);
+                     string fileName = authorVM.AuthorName.ToString() + Path.GetExtension(authorVM.image.FileName);
 
                     // Set the image path as a combination of a directory and the filename
                     string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Author", fileName);
@@ -234,18 +236,20 @@ namespace Test.Controllers
                     // Save the new image to the specified path
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        await image.CopyToAsync(stream);
+                        await authorVM.image.CopyToAsync(stream);
                     }
 
-                    // Update the Author's ImageUrl property
-                    author.ImageUrl = fileName;
+                    //// Update the Author's ImageUrl property
+                    //authorVM.ImageUrl = fileName;
+                    newFileName = fileName;
+                    existingAuthor.ImageUrl = newFileName;
+
                 }
 
                 // Update other properties of the existing Author with the new values
-                existingAuthor.AuthorName = author.AuthorName;
-                existingAuthor.DescripTion = author.DescripTion;
-                existingAuthor.Email = author.Email;
-                existingAuthor.ImageUrl = author.ImageUrl;
+                existingAuthor.AuthorName = authorVM.AuthorName;
+                existingAuthor.DescripTion = authorVM.DescripTion;
+                existingAuthor.Email = authorVM.Email;
                 // Update the existing Author entity in your data store
                 AuthRepo.Update(existingAuthor);
 
@@ -254,7 +258,7 @@ namespace Test.Controllers
             }
 
             // If no image was selected or other validation failed, return to the view with the Author model
-            return View(author);
+            return View(authorVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Details(int id)
@@ -266,8 +270,13 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the Author is not found
             }
-
-            return View(author);
+            AuthorViewModel authorVM = new AuthorViewModel();
+            authorVM.AuthorID = author.AuthorID;
+            authorVM.AuthorName = author.AuthorName;
+            authorVM.DescripTion = author.DescripTion;
+            authorVM.Email = author.Email;
+            authorVM.ImgUrl = author.ImageUrl;
+            return View(authorVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public IActionResult Delete(int id)
@@ -279,8 +288,13 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the Author is not found
             }
-
-            return View(author);
+            AuthorViewModel authorVM = new AuthorViewModel();
+            authorVM.AuthorID = author.AuthorID;
+            authorVM.AuthorName = author.AuthorName;
+            authorVM.DescripTion = author.DescripTion;
+            authorVM.Email = author.Email;
+            authorVM.ImgUrl = author.ImageUrl;
+            return View(authorVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
@@ -289,16 +303,22 @@ namespace Test.Controllers
         {
             // Retrieve the Author entity from your data store based on the provided ID
             Author author = AuthRepo.GetById(id);
-         
+
             if (author == null)
             {
                 return NotFound(); // Or handle the case when the Author is not found
             }
+            AuthorViewModel authorVM = new AuthorViewModel();
+            authorVM.AuthorID = author.AuthorID;
+            authorVM.AuthorName = author.AuthorName;
+            authorVM.DescripTion = author.DescripTion;
+            authorVM.Email = author.Email;
+            authorVM.ImgUrl = author.ImageUrl;
 
             // Delete the image if it exists
-            if (!string.IsNullOrEmpty(author.ImageUrl))
+            if (!string.IsNullOrEmpty(authorVM.ImgUrl))
             {
-                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Author", author.ImageUrl);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Author", authorVM.ImgUrl);
                 if (System.IO.File.Exists(imagePath))
                 {
                     System.IO.File.Delete(imagePath);

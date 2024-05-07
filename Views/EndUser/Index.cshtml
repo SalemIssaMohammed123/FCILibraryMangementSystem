@@ -1,5 +1,5 @@
 ﻿<br /> <br />
-<h2 class="text-center">EndUserss Informations</h2>
+<h2 class="text-center">EndUsers Informations</h2>
 <form asp-action="index" asp-controller="EndUser" method="Get">
     <div class="col-md-4">
         <input type="text" id="search" name="search" value="@Convert.ToString(TempData["search for specific EndUser"])" onchange="search_endUser()" class="form-control" style="max-width:100%" placeholder="Search EndUser here..." />
@@ -19,7 +19,7 @@
     @if (User.IsInRole("Admin"))
     {
         <button type="button" class="btn btn-primary" style="position:relative; left:855px;">
-            <i class="fa fa-search"></i><a style="text-decoration:none; color:white;" asp-action="Create" asp-controller="Author">Create</a>
+            <i class="fa fa-search"></i><a style="text-decoration:none; color:white;" asp-action="Create" asp-controller="EndUser">Create</a>
         </button>
     }
 }

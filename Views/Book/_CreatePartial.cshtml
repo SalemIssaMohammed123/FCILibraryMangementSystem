@@ -1,0 +1,66 @@
+﻿@using Test.ViewModels
+@model BookViewModel
+@{
+    FCI_LibraryMangementSystemViewModel viewModel = (FCI_LibraryMangementSystemViewModel)ViewData["FCI_LibraryMangementSystemViewModel"];
+
+    var DeptList = new SelectList(viewModel.Departements, "DepartementID", "DepartementName");
+    var AuthList = new SelectList(viewModel.Authors, "AuthorID", "AuthorName");
+    var PublishList = new SelectList(viewModel.Publishers, "PublisherID", "PublisherName");
+}
+<div class="mb-3">
+    <label asp-for="image" class="form-label"></label>
+    <input asp-for="image" class="form-control" accept="image/jpeg,image/png" />
+    <span asp-validation-for="image" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label asp-for="BookTitle" class="form-label"></label>
+    <input asp-for="BookTitle" class="form-control" aria-describedby="emailHelp" />
+    <span asp-validation-for="BookTitle" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label asp-for="ISBN" class="form-label"></label>
+    <input asp-for="ISBN" class="form-control" />
+    <span asp-validation-for="ISBN" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label class="form-check-label" asp-for="Count"></label>
+    <input asp-for="Count" class="form-control" />
+    <span asp-validation-for="Count" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label asp-for="NoOfPage" class="form-label"></label>
+    <input asp-for="NoOfPage" class="form-control" />
+    <span asp-validation-for="NoOfPage" class="text-danger"></span>
+</div>
+<br />
+<br />
+<div class="mb-3">
+    <label asp-for="DepartmentID" class="form-label"></label>
+    <select asp-for="DepartmentID" asp-items="@DeptList" class="form-select" aria-label="Default select example">
+        <option value="0">----Select Departement----</option>
+    </select>
+    <span asp-validation-for="DepartmentID" class="text-danger"></span>
+</div>
+<br />
+<br />
+<div class="mb-3">
+    <label asp-for="AuthorID" class="form-label"></label>
+    <select asp-for="AuthorID" asp-items="@AuthList" class="form-select" aria-label="Default select example">
+        <option value="0">----Select Author----</option>
+    </select>
+    <span asp-validation-for="AuthorID" class="text-danger"></span>
+</div>
+<br />
+<br />
+<div class="mb-3">
+    <label asp-for="PublisherID" class="form-label"></label>
+    <select asp-for="PublisherID" asp-items="@PublishList" class="form-select" aria-label="Default select example">
+        <option value="0">----Select Publisher----</option>
+    </select>
+    <span asp-validation-for="PublisherID" class="text-danger"></span>
+</div>
+<br />

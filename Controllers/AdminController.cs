@@ -5,7 +5,7 @@ using Test.Models;
 using Test.ViewModels;
 namespace Test.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
@@ -23,8 +23,8 @@ namespace Test.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                AdminList = (IList<ApplicationUser>)AdminList.Where(u=>u.UserName.StartsWith(search));
-                    if (AdminList == null)
+                AdminList = AdminList.Where(u => u.UserName.StartsWith(search)).ToList();
+                if (AdminList == null)
                     {
                         ViewData["checking"] = true;
                     AdminList =await userManager.GetUsersInRoleAsync("Admin");
@@ -56,7 +56,7 @@ namespace Test.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                AdminList = (IList<ApplicationUser>)AdminList.Where(u => u.UserName.StartsWith(search));
+                AdminList = AdminList.Where(u => u.UserName.StartsWith(search)).ToList();
                 if (AdminList == null)
                 {
                     ViewData["checking"] = true;
@@ -85,12 +85,12 @@ namespace Test.Controllers
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RegisterUserViewModel UserVM, IFormFile image)
+        public async Task<IActionResult> Create(RegisterUserViewModel UserVM)
         {
-            if (ModelState.IsValid && image != null && image.Length > 0)
+            if (ModelState.IsValid && UserVM.image != null && UserVM.image.Length > 0)
             {
                 // Generate a unique filename based on the person's ID
-                string fileName = UserVM.FirstName.ToString() + Path.GetExtension(image.FileName);
+                string fileName = UserVM.FirstName.ToString() + Path.GetExtension(UserVM.image.FileName);
 
                 // Set the image path as a combination of a directory and the filename
                 string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Admin", fileName);
@@ -98,7 +98,7 @@ namespace Test.Controllers
                 // Save the image to the specified path
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(stream);
+                    await UserVM.image.CopyToAsync(stream);
                 }
 
                 // Update the Admin's ImagePath property
@@ -118,7 +118,7 @@ namespace Test.Controllers
                    //not create cookie
                    if(result2.Succeeded)
                     {
-                        return RedirectToAction("Admin", "index");
+                        return RedirectToAction("index","Admin");
 
                     }
                     else
@@ -137,7 +137,7 @@ namespace Test.Controllers
                     }
                 }
             }
-            return View();
+            return View(UserVM);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public async Task<IActionResult> Edit(string id)
@@ -149,7 +149,7 @@ namespace Test.Controllers
             {
                 return NotFound(); // Or handle the case when the user is not found
             }
-            RegisterUserViewModel uservm = new RegisterUserViewModel();
+            RegisterUserViewModelForEdit uservm = new RegisterUserViewModelForEdit();
             uservm.UserId = user.Id; //it is important line
             uservm.UserName = user.UserName;
             uservm.FirstName = user.FirstName;
@@ -160,7 +160,7 @@ namespace Test.Controllers
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(RegisterUserViewModel UserVM, string id, IFormFile image)
+        public async Task<IActionResult> Edit(RegisterUserViewModelForEdit UserVM, string id)
         {
             if (ModelState.IsValid && UserVM != null)
             {
@@ -171,7 +171,7 @@ namespace Test.Controllers
                 {
                     return NotFound(); // Or handle the case when the Admin is not found
                 }
-                if (image != null && image.Length > 0)
+                if (UserVM.image != null && UserVM.image.Length > 0)
                 {
                     // Delete the old image if it exists
                     if (!string.IsNullOrEmpty(existinguser.ImageUrl))
@@ -184,7 +184,7 @@ namespace Test.Controllers
                     }
 
                     // Generate a unique filename based on the Admin's ID
-                    string fileName = UserVM.UserName.ToString() + Path.GetExtension(image.FileName);
+                    string fileName = UserVM.UserName.ToString() + Path.GetExtension(UserVM.image.FileName);
 
                     // Set the image path as a combination of a directory and the filename
                     string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Admin", fileName);
@@ -192,11 +192,12 @@ namespace Test.Controllers
                     // Save the new image to the specified path
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        await image.CopyToAsync(stream);
+                        await UserVM.image.CopyToAsync(stream);
                     }
 
                     // Update the Admin's ImageUrl property
                     UserVM.ImageUrl = fileName;
+                    existinguser.ImageUrl = UserVM.ImageUrl;
                 }
 
                 // Update other properties of the existing Admin with the new values
@@ -204,14 +205,13 @@ namespace Test.Controllers
                 existinguser.FirstName = UserVM.FirstName;
                 existinguser.LastName = UserVM.LastName;
                 existinguser.PasswordHash = UserVM.Password;
-                existinguser.ImageUrl = UserVM.ImageUrl;
                 
                 // Update the existing Admin entity in your data store
                 IdentityResult result= await userManager.UpdateAsync(existinguser);
                 if (result.Succeeded)
                 {
                     // Redirect to the index action for further modifications
-                    return RedirectToAction("Admin", "index");
+                    return RedirectToAction("index", "admin");
 
                 }
                 else
@@ -243,7 +243,7 @@ namespace Test.Controllers
             uservm.FirstName = user.FirstName;
             uservm.LastName = user.LastName;
             uservm.Address = user.Address;
-
+            uservm.ImageUrl = user.ImageUrl;
             return View(uservm);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -262,7 +262,8 @@ namespace Test.Controllers
             uservm.FirstName = user.FirstName;
             uservm.LastName = user.LastName;
             uservm.Address = user.Address;
-
+            uservm.ImageUrl = user.ImageUrl;
+            uservm.ImageUrl = user.ImageUrl;
             return View(uservm);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -287,13 +288,12 @@ namespace Test.Controllers
                     System.IO.File.Delete(imagePath);
                 }
             }
-
             // Remove the Admin entity from the data store
             IdentityResult result = await userManager.RemoveFromRoleAsync(user,"Admin");
             if (result.Succeeded)
             {
 
-                return RedirectToAction("Admin", "index");
+                return RedirectToAction("index", "Admin");
             }
             else
             {
