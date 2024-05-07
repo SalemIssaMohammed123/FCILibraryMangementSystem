@@ -40,7 +40,9 @@ namespace Test.Models
         public virtual Publisher Publisher { get; set; }
         public virtual Departement Departement { get; set; }
         public virtual Author Author { get; set; }
-        public ICollection<Report> reports { get; set; }
-        //public ICollection<Borrow> borrows { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BorrowBook> BorrowBooks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReportForBook> ReportedBooks { get; set; }
     }
 }

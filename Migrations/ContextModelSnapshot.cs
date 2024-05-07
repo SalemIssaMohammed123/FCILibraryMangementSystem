@@ -182,6 +182,10 @@ namespace Test.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -201,10 +205,6 @@ namespace Test.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password_hint")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -317,6 +317,39 @@ namespace Test.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("Test.Models.BorrowBook", b =>
+                {
+                    b.Property<int>("BorrowBookID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BorrowBookID"), 1L, 1);
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BorrowedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("expired")
+                        .HasColumnType("bit");
+
+                    b.HasKey("BorrowBookID");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("BorrowBook");
+                });
+
             modelBuilder.Entity("Test.Models.Departement", b =>
                 {
                     b.Property<int>("DepartementID")
@@ -366,26 +399,32 @@ namespace Test.Migrations
                     b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("Test.Models.Report", b =>
+            modelBuilder.Entity("Test.Models.ReportForBook", b =>
                 {
-                    b.Property<int>("ReportId")
+                    b.Property<int>("ReportBookID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportBookID"), 1L, 1);
 
-                    b.Property<int>("book_id")
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<string>("report")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ReportId");
+                    b.HasKey("ReportBookID");
 
-                    b.HasIndex("book_id");
+                    b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Report");
+                    b.HasIndex("BookId");
+
+                    b.ToTable("ReportForBook");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -466,15 +505,49 @@ namespace Test.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("Test.Models.Report", b =>
+            modelBuilder.Entity("Test.Models.BorrowBook", b =>
                 {
-                    b.HasOne("Test.Models.Book", "book")
-                        .WithMany("reports")
-                        .HasForeignKey("book_id")
+                    b.HasOne("Test.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("BorrowedBooks")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("book");
+                    b.HasOne("Test.Models.Book", "Book")
+                        .WithMany("BorrowBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("Test.Models.ReportForBook", b =>
+                {
+                    b.HasOne("Test.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("ReportedBook")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Test.Models.Book", "Book")
+                        .WithMany("ReportedBooks")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("Test.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("BorrowedBooks");
+
+                    b.Navigation("ReportedBook");
                 });
 
             modelBuilder.Entity("Test.Models.Author", b =>
@@ -484,7 +557,9 @@ namespace Test.Migrations
 
             modelBuilder.Entity("Test.Models.Book", b =>
                 {
-                    b.Navigation("reports");
+                    b.Navigation("BorrowBooks");
+
+                    b.Navigation("ReportedBooks");
                 });
 
             modelBuilder.Entity("Test.Models.Departement", b =>
