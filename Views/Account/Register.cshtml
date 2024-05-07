@@ -23,14 +23,14 @@
                 <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 
                     <form style="width: 23rem;" asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
-                         <div asp-validation-summary="All" class="text-danger"></div>
-                         <br />
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <br />
                         <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register</h3>
                         <br />
                         <div class="mb-3">
-                            <span asp-validation-for="image" class="text-danger"></span>
-                            <label asp-for="image" class="form-label"></label>
-                            <input asp-for="image" class="form-control" accept="image/jpeg,image/png,image/gif,imag/svg" />
+                            <label asp-for="ImageUrl" class="form-label"></label>
+                            <input type="file" class="form-control" name="image" id="image" accept="image/jpeg,image/png,image/gif,imag/svg" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
                         </div>
                         <br />
                         <div data-mdb-input-init class="form-outline mb-4">

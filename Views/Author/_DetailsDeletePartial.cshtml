@@ -1,5 +1,4 @@
-﻿@using Test.ViewModels
-@model AuthorViewModel
+﻿@model Author
 
 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
   <div class="card-header">Author</div>
@@ -9,7 +8,7 @@
   </div>
 </div>
 <div class="card bg-dark text-white">
-    <img src="~/Images/Author/@Model.ImgUrl" class="card-img">
+  <img src="~/Images/Author/@Model.ImageUrl" class="card-img" >
   <div class="card-img-overlay">
     <h5 class="card-title">@Model.AuthorName</h5>
     <p class="card-text">My Email is for communication: </p>

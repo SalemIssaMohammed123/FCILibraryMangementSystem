@@ -1,0 +1,28 @@
+﻿@model Publisher
+
+<div class="mb-3">
+    <label asp-for="ImageUrl" class="form-label"></label>
+    <input type="file" class="form-control" name="image" id="image" accept="image/jpeg,image/png,image/gif,imag/svg"/>
+    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label asp-for="PublisherName" class="form-label"></label>
+    <input asp-for="PublisherName" class="form-control" aria-describedby="emailHelp" />
+    <span asp-validation-for="PublisherName" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" class="form-control"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+<br />
+<div class="mb-3">
+    <label class="form-check-label" asp-for="Email"></label>
+    <input asp-for="Email" class="form-control"/>
+    <span asp-validation-for="Email" class="text-danger"></span>
+    <div id="emailHelp" class="form-text">
+        We'll never share your email with anyone else.
+    </div>
+</div>

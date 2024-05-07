@@ -7,28 +7,27 @@
                 <th scope="col">EndUserLastName</th>
                 <th scope="col">EndUserAddress</th>
                 <th scope="col">EndUserImage</th>
-                <th scope="col">Operations</th>
             </tr>
         </thead>
         <tbody>
             @foreach (ApplicationUser user in (@List<ApplicationUser>)ViewData["paginatedList"])
             {
                 <tr>
-                    <td class="table-warning">@user.UserName</td>
-                    <td class="table-info">@user.FirstName</td>
-                    <td class="table-info">@user.LastName</td>
-                    <td class="bg-warning">@user.Address</td>
-                    <td class="table-light"><img src="~/Images/EndUser/@user.ImageUrl" width="150" height="150" /></td>
+                    <td class="table-active">@user.UserName</td>
+                    <td class="table-primary">@user.FirstName</td>
+                    <td class="table-secondary">@user.LastName</td>
+                    <td class="table-primary">@user.Address</td>
+                    <td class="table-success"><img src="~/Images/EndUser/@user.ImageUrl" width="150" height="150" /></td>
                     @{
                         var parms = new Dictionary<string, string>
                 {
                 { "id", user.Id }
                 };
                     }
-                    <td class="bg-danger">
-                        <a asp-action="Edit" asp-controller="EndUser" asp-all-route-data="parms" class="link-success" style="display:block;">Edit</a>
-                        <a asp-action="Details" asp-controller="EndUser" asp-all-route-data="parms" class="link-success" style="display:block;">Details</a>
-                        <a asp-action="Delete" asp-controller="EndUser" asp-all-route-data="parms" class="link-success" style="display:block;">Delete</a>
+                    <td>
+                        <a asp-action="Edit" asp-controller="EndUser" asp-all-route-data="parms" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>></a>
+                        <a asp-action="Details" asp-controller="EndUser" asp-all-route-data="parms" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>></a>
+                        <a asp-action="Delete" asp-controller="EndUser" asp-all-route-data="parms" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>></a>
                     </td>
                     @*There exist code we write untill we reach the identity  the links of users and the EndUser should
                 maintain and the user outside the system the links excepected on one row

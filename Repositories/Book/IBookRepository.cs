@@ -6,9 +6,6 @@
 
         ICollection<Test.Models.Book> GetAllAsList();
 
-        ICollection<Test.Models.Book> GetAllAsListForBorrow();
-
-
         IQueryable<Test.Models.Book> GetAllUsingSearchWord(string search);
 
         IQueryable<Test.Models.Book> GetAllUsingSearchWordAndOrderingWithBookDepartementNameWithDescendingOrder(string search);
@@ -27,11 +24,5 @@
         void Update(Test.Models.Book existingBook);
 
         void Delete(Test.Models.Book book);
-
-        string GetDepartementNameByID(int DepartementID);
-
-        string GetAuthorNameByID(int AuthorID);
-
-        string GetPublisherNameByID(int PublisherID);
     }
 }

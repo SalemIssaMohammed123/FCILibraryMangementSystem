@@ -6,7 +6,6 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using Test.ViewModels
 @model Departement
 <br /> <br />
 <h2 class="text-center">Details Inforamtion</h2>
@@ -14,9 +13,9 @@
 <partial name="_DetailsDeletePartial" model=Model></partial>
 <br />
 <p>
-    <a href="/Departement/Edit/@Model.DepartementID" class="link-success">Edit</a>
+    <a asp-action="Edit" asp-controller="Departement" asp-route-itemid="@Model.DepartementID" class="btn btn-primary">Edit</a>
 <br />
-    <a href="/Departement/index" class="link-success">Back to list</a>
+    <a asp-action="index" asp-controller="Departement" class="btn btn-primary">Back to list</a>
 
 </p>
 @section AdvertiseSection

@@ -5,15 +5,14 @@
             <tr>
                 <th scope="col">DepartementName</th>
                 <th scope="col">Books</th>
-                <th scope="col">Operations</th>
             </tr>
         </thead>
         <tbody>
             @foreach (Departement d in (@List<Departement>)ViewData["paginatedList"])
             {
                 <tr>
-                    <td class="table-info">@d.DepartementName</td>
-                    <td class="bg-info">
+                    <td class="table-active">@d.DepartementName</td>
+                    <td class="table-danger">
                         @foreach (Book b in d.Books)
                         {
                             @b.BookTitle
@@ -27,24 +26,23 @@
                     {
                         @if (User.IsInRole("Admin"))
                         {
-                            <td class="bg-danger">
-
-                                <a href="/Departement/Edit/@d.DepartementID" class="link-success" style="display:block;">Edit</a>
-                                <a href="/Departement/Details/@d.DepartementID" class="link-success" style="display:block;">Details</a>
-                                <a href="/Departement/Delete/@d.DepartementID" class="link-success" style="display:block;">Delete</a>
+                            <td>
+                                <a asp-action="Edit" asp-controller="Departement" asp-route="@d.DepartementID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Edit</a>
+                                <a asp-action="Details" asp-controller="Departement" asp-route="@d.DepartementID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
+                                <a asp-action="Delete" asp-controller="Departement" asp-route="@d.DepartementID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Delete</a>
                             </td>
                         }
                         @if (User.IsInRole("Teacher"))
                         {
-                            <td class="bg-danger">
-                                <a href="/Departement/Edit/@d.DepartementID" class="link-success" style="display:block;">Edit</a>
-                                <a href="/Departement/Details/@d.DepartementID" class="link-success" style="display:block;">Details</a>
+                            <td>
+                                <a asp-action="Edit" asp-controller="Departement" asp-route="@d.DepartementID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Edit</a>
+                                <a asp-action="Details" asp-controller="Departement" asp-route="@d.DepartementID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
                             </td>
                         }
                         @if (User.IsInRole("Student"))
                         {
-                            <td class="bg-info">
-                                <a href="/Departement/Details/@d.DepartementID" class="link-success" style="display:block;">Details</a>
+                            <td>
+                                <a asp-action="Details" asp-controller="Departement" asp-route="@d.DepartementID" class="btn btn-secondary btn-sm mr-1"><i class="fa fa-plus"></i>>Details</a>
                             </td>
                         }
                     }

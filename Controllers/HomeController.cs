@@ -28,8 +28,6 @@ namespace Test.Controllers
             TempData["search for specific EndUser"] = "";
             TempData["search for specific TeacherStudent"] = "";
             TempData["search for specific TeacherAdmin"] = "";
-            TempData["select User"] = "";
-            TempData["search for specific User who borrow the book"] = "";
             return View();
         }
 

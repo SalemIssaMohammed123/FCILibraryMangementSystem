@@ -11,10 +11,7 @@ namespace Test.Models
         public string LastName { get; set; }
 
         public string ImageUrl { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Book>? BorrowedBooks { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ReportForBook>? ReportedBook { get; set; }
+
 
     }
 }

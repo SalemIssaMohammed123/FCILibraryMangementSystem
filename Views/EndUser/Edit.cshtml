@@ -7,7 +7,7 @@
 }
 
 @using Test.ViewModels;
-@model RegisterUserViewModelForEdit
+@model RegisterUserViewModel
 <br /> <br />
 <h2 class="text-center fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Edit Data into EndUser Tabel</h2>
 <section class="vh-100">
@@ -18,10 +18,10 @@
 <form asp-action="Edit" asp-controller="EndUser" asp-route-id="@Model.UserId" method="post" enctype="multipart/form-data">
     <div class="mb-3" asp-validation-summary="All"></div>
     <br />
-                        <partial name="_EditPartial " model="Model"></partial>
+                        <partial name="_CreateEditPartial" model="Model"></partial>
                         <br /> 
                         <div class="pt-1 mb-4">
-                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" style="width: 370px;" type="submit" value="Create">Save</button>
+                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-info btn-lg btn-block" style="width: 370px;" type="submit" value="Create">Add EndUser</button>
                         </div>
                     </form>
 
@@ -36,7 +36,7 @@
     </div>
 </section>
 <br /> <br />
-<a asp-action="index" asp-controller="EndUser" class="btn btn-primary" style="position:relative; top:70px;">Back to list</a>
+<a asp-action="index" asp-controller="EndUser" class="btn btn-primary">Back to list</a>
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial"></partial>

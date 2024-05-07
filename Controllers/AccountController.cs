@@ -5,7 +5,6 @@ using System.Net.Mail;
 using System.Net;
 using Test.Models;
 using Test.ViewModels;
-using System.Text;
 
 namespace Test.Controllers
 {
@@ -21,9 +20,11 @@ namespace Test.Controllers
             this.signInManager = signInManager;
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
-        public async Task<JsonResult> CheckUserNameUnique(string UserName)
+        public async Task<JsonResult> CheckUserNameUnique(string UserName, string UserId)
         {
             var isUserNameUnique = await userManager.FindByNameAsync(UserName);
+            if (UserId == null) //for new
+            {
                 if (isUserNameUnique == null)
                 {
                     return Json(true);
@@ -32,6 +33,26 @@ namespace Test.Controllers
                 {
                     return Json(false);
                 }
+            }
+            else
+            {
+                var userWithId = await userManager.FindByIdAsync(UserId);
+                if (userWithId != null && userWithId.UserName == UserName)
+                {
+                    // The user is editing their profile and the username remains unchanged,
+                    // so it is still considered unique.
+                    return Json(true);
+                }
+                var userWithSameName = await userManager.FindByNameAsync(UserName);
+                if (userWithSameName != null && userWithSameName.Id != UserId)
+                {
+                    // The username belongs to another user, so it is not unique.
+                    return Json(false);
+                }
+                    return Json(true);
+
+            }
+            
         }
 
         [HttpGet]
@@ -42,25 +63,20 @@ namespace Test.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginUserViewModel UserVM)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 //instead check in the database directly
                 ApplicationUser userModel =await userManager.FindByNameAsync(UserVM.UserName);
-                //Convert the password string to bytes. 
-                byte[] passwordBytes = Encoding.UTF8.GetBytes(UserVM.Password);
-                //Encode the password bytes using Base64 encoding. 
-                string base64Password = Convert.ToBase64String(passwordBytes);
                 if (userModel != null)
                 {
-                    bool result= await userManager.CheckPasswordAsync(userModel, base64Password);
+                    bool result= await userManager.CheckPasswordAsync(userModel, UserVM.Password);
                     if (result)
                     { 
                         //create cookie ID Name with this user and role in the system
                         await signInManager.SignInAsync(userModel, isPersistent: UserVM.RememberMe);
-                        return RedirectToAction("index","Home");
+                        return RedirectToAction("index", "Home");
                     }
                     else
                     {
@@ -81,23 +97,23 @@ namespace Test.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterUserViewModel UserVM)
+        public async Task<IActionResult> Register(RegisterUserViewModel UserVM, IFormFile image)
         {
-            if(ModelState.IsValid && UserVM.image != null && UserVM.image.Length > 0)
+            if(ModelState.IsValid && image != null && image.Length > 0)
             {
                 // Generate a unique filename based on the person's ID
-                string fileName = UserVM.FirstName.ToString() + Path.GetExtension(UserVM.image.FileName);
+                string fileName = UserVM.FirstName.ToString() + Path.GetExtension(image.FileName);
 
                 // Set the image path as a combination of a directory and the filename
-                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/EndUser", fileName);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/Users", fileName);
 
                 // Save the image to the specified path
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await UserVM.image.CopyToAsync(stream);
+                    await image.CopyToAsync(stream);
                 }
 
-                // Update the user's ImagePath property
+                // Update the Author's ImagePath property
                 UserVM.ImageUrl = fileName;
                 //Mapping from ViewModel to Model
                 ApplicationUser user = new ApplicationUser();
@@ -116,7 +132,7 @@ namespace Test.Controllers
                         //Create Cookie
                         await signInManager.SignInAsync(user, isPersistent: false);  //ID - Name -Role
 
-                        return RedirectToAction("Login", "Account");
+                        return RedirectToAction("Account", "Login");
                     }
                     else
                     {
@@ -179,19 +195,19 @@ namespace Test.Controllers
 						Body = emailBody
 					};
 
-                    try
-                    {
-                        smtpClient.Send(mailMessage);
+					try
+					{
+						smtpClient.Send(mailMessage);
 
-                        // Show a success message or redirect to a confirmation page
-                        return View("ForgotPasswordConfirmation");
-                    }
-                    catch (SmtpException ex)
-                    {
-                        // Log or handle the exception accordingly
-                        ModelState.AddModelError("", "Failed to send email. Please try again later.");
-                    }
-                }
+						//Redirect to a confirmation page
+						return View("ForgotPasswordConfirmation");
+					}
+					catch (SmtpException ex)
+					{
+						// Log or handle the exception accordingly
+						ModelState.AddModelError("", "Failed to send email. Please try again later.");
+					}
+				}
                 else
                 {
                     ModelState.AddModelError("", "This user doesnot exist in our system");

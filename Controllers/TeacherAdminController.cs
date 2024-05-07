@@ -143,15 +143,15 @@ namespace Test.Controllers
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RegisterUserViewModel UserVM)
+        public async Task<IActionResult> Create(RegisterUserViewModel UserVM, IFormFile image)
         {
             List<string> roles = new List<string>();
             roles.Add("Teacher");
             roles.Add("Admin");
-            if (ModelState.IsValid && UserVM.image != null && UserVM.image.Length > 0)
+            if (ModelState.IsValid && image != null && image.Length > 0)
             {
                 // Generate a unique filename based on the person's ID
-                string fileName = UserVM.FirstName.ToString() + Path.GetExtension(UserVM.image.FileName);
+                string fileName = UserVM.FirstName.ToString() + Path.GetExtension(image.FileName);
 
                 // Set the image path as a combination of a directory and the filename
                 string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/TeacherAdmin", fileName);
@@ -159,7 +159,7 @@ namespace Test.Controllers
                 // Save the image to the specified path
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await UserVM.image.CopyToAsync(stream);
+                    await image.CopyToAsync(stream);
                 }
 
                 //// Update the TeacherAdmin's ImagePath property
@@ -179,7 +179,7 @@ namespace Test.Controllers
                     //not create cookie
                     if (result2.Succeeded)
                     {
-                        return RedirectToAction("index", "TeacherAdmin");
+                        return RedirectToAction("TeacherAdmin", "index");
 
                     }
                     else
@@ -198,7 +198,7 @@ namespace Test.Controllers
                     }
                 }
             }
-            return View(UserVM);
+            return View();
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
         public async Task<IActionResult> Edit(string id)
@@ -221,7 +221,7 @@ namespace Test.Controllers
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
         [Microsoft.AspNetCore.Mvc.ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(RegisterUserViewModel UserVM, string id)
+        public async Task<IActionResult> Edit(RegisterUserViewModel UserVM, string id, IFormFile image)
         {
             if (ModelState.IsValid && UserVM != null)
             {
@@ -232,7 +232,7 @@ namespace Test.Controllers
                 {
                     return NotFound(); // Or handle the case when the TeacherAdmin is not found
                 }
-                if (UserVM.image != null && UserVM.image.Length > 0)
+                if (image != null && image.Length > 0)
                 {
                     // Delete the old image if it exists
                     if (!string.IsNullOrEmpty(existinguser.ImageUrl))
@@ -245,7 +245,7 @@ namespace Test.Controllers
                     }
 
                     // Generate a unique filename based on the Teacher's UserName
-                    string fileName = UserVM.UserName.ToString() + Path.GetExtension(UserVM.image.FileName);
+                    string fileName = UserVM.UserName.ToString() + Path.GetExtension(image.FileName);
 
                     // Set the image path as a combination of a directory and the filename
                     string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images/TeacherAdmin", fileName);
@@ -253,12 +253,11 @@ namespace Test.Controllers
                     // Save the new image to the specified path
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        await UserVM.image.CopyToAsync(stream);
+                        await image.CopyToAsync(stream);
                     }
 
                     // Update the Admin's ImageUrl property
                     UserVM.ImageUrl = fileName;
-                    existinguser.ImageUrl = UserVM.ImageUrl;
                 }
 
                 // Update other properties of the existing TeacherAdmin with the new values
@@ -266,6 +265,7 @@ namespace Test.Controllers
                 existinguser.FirstName = UserVM.FirstName;
                 existinguser.LastName = UserVM.LastName;
                 existinguser.PasswordHash = UserVM.Password;
+                existinguser.ImageUrl = UserVM.ImageUrl;
 
                 // Update the existing TeacherAdmin entity in your data store
                 IdentityResult result = await userManager.UpdateAsync(existinguser);
@@ -304,7 +304,7 @@ namespace Test.Controllers
             uservm.FirstName = user.FirstName;
             uservm.LastName = user.LastName;
             uservm.Address = user.Address;
-            uservm.ImageUrl = user.ImageUrl;
+
             return View(uservm);
         }
         [Microsoft.AspNetCore.Mvc.HttpGet]
@@ -323,7 +323,7 @@ namespace Test.Controllers
             uservm.FirstName = user.FirstName;
             uservm.LastName = user.LastName;
             uservm.Address = user.Address;
-            uservm.ImageUrl = user.ImageUrl;
+
             return View(uservm);
         }
         [Microsoft.AspNetCore.Mvc.HttpPost]
@@ -357,7 +357,7 @@ namespace Test.Controllers
             if (result.Succeeded)
             {
 
-                return RedirectToAction("index", "TeacherAdmin");
+                return RedirectToAction("TeacherAdmin", "index");
             }
             else
             {

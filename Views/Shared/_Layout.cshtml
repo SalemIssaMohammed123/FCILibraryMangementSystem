@@ -5,19 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Test</title>
-    <link href="~/css/StyleSheet.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Test.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Vision.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata" />
-@*     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-U9dFqU6/MX5Pc6vqbb9K2BjP+PZL4mOaX2uIOn1Jl7r8Gn4BKmMhzIz6g9kQ0mUv1UJm1p1o8voH9G+vQwE26Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
- *@    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-U9dFqU6/MX5Pc6vqbb9K2BjP+PZL4mOaX2uIOn1Jl7r8Gn4BKmMhzIz6g9kQ0mUv1UJm1p1o8voH9G+vQwE26Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
         body {
-            background-color: white;
+            background-color: #cbc4c4;
             font-family: 'Oxygen', sans-serif;
-            height:1100px;
         }
 
         .btn {
@@ -45,33 +43,13 @@
         .dropdown > .dropdown-toggle:active {
             pointer-events: none;
         }
-        footer
-        {
-            background-color: #FFFFFF;
-            padding: 0px;
-            color: #1f1f1f;
-            text-align:center;
-        }
-        footer ul{
-            list-style:none;
-            padding-left:0px;
-            margin:10px 0 0;
-        }
-        footer ul li{
-            display:inline-block;
-        }
-
-        footer ul li img
-        {
-            width:24px;
-        }
     </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-secondary border-bottom fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-secondary border-bottom fixed-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/Home/Assuit_Unversity_Logo2.jpg" alt="Company logo" width="70" height="40" class="rounded-circle m-0" /> FCI Library</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/Home/Assuit_Unversity_Logo2.jpg" alt="Company logo" width="70" height="40" class="rounded-circle" /> FCI Library</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -153,7 +131,7 @@
                         @if(User.Identity.IsAuthenticated==false)
                         {
                         <li class="nav-item">
-                            <a class="nav-link btn border-1 bg-primary  text-light" asp-area="" asp-controller="Account" asp-action="Login" class="btn fa fa-home">Log In</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login" class="btn fa fa-home">Log In</a>
                         </li>
                         }
                         else
@@ -162,7 +140,7 @@
                                 <a class="nav-link text-dark" href="#" class="btn fa fa-home">Welcome @User.Identity.Name</a>
                             </li>
                         <li class="nav-item">
-                                <a class=" btn border-1 bg-primary nav-link text-light " style="font-style:normal;" asp-area="" asp-controller="Account" asp-action="LogOut" class="btn fa fa-home">Log Out</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index" class="btn fa fa-home">Log Out</a>
                         </li>
                         }
                         </ul>
@@ -171,53 +149,56 @@
         </nav>
         @RenderSection("AdvertiseSection", required: false);
     </header>
-    <div class="container" style="background-color:#FFFFFF; padding:0px; margin:0px;">
+    <div class="container" >
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer style="position:fixed; bottom:0px; background-color:#fefefe; width:100%;" >
+    <footer class="text-center bg-body-tertiary" style="background-color: #FFFFFF;">
         <!-- Grid container -->
-        <div class="container pt-4" >
+        <div class="container pt-4" style="background-color: #FFFFFF;">
             <!-- Section: Social media -->
             <section class="mb-4">
-                <ul>
                 <!-- Facebook -->
-                <li 
+                <a data-mdb-ripple-init
+                   class="btn btn-link btn-floating btn-lg text-body m-1"
                    href="https://www.facebook.com/profile.php?id=100021902261141&locale=ar_AR"
                    role="button"
-                   >
-                    <img src="~/Images/Icons/facebook.png" alt="Salem Facebook Account" />
-                </li>
+                   data-mdb-ripple-color="dark">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
                 <!-- Google -->
-                <li 
+                <a data-mdb-ripple-init
+                   class="btn btn-link btn-floating btn-lg text-body m-1"
                    href="www.salmy7270@gmail.com"
                    role="button"
-                   >
-                    <img src="~/Images/Icons/search.png" alt="Salem Google Account" />
-                </li>
+                   data-mdb-ripple-color="dark">
+                    <i class="fab fa-google"></i>
+                </a>
+
                 <!-- Linkedin -->
-                <li 
+                <a data-mdb-ripple-init
+                   class="btn btn-link btn-floating btn-lg text-body m-1"
                    href="www.linkedin.com/in/salem123"
                    role="button"
-                   >
-                    <img src="~/Images/Icons/linkedin.png" alt="Salem Linkedin Account" style="width:24px; height:15px;" />
-                </li>
+                   data-mdb-ripple-color="dark">
+                    <i class="fab fa-linkedin"></i>
+                </a>
                 <!-- Github -->
-                <li 
+                <a data-mdb-ripple-init
+                   class="btn btn-link btn-floating btn-lg text-body m-1"
                    href="https://github.com/SalemIssaMohammed123"
                    role="button"
-                   >
-                    <img src="~/Images/Icons/github.png" alt="Salem Github Account" />
-                </li>
-                </ul>
+                   data-mdb-ripple-color="dark">
+                    <i class="fab fa-github"></i>
+                </a>
             </section>
             <!-- Section: Social media -->
         </div>
         <!-- Grid container -->
         <!-- Copyright -->
-        <div style="background-color: #FFFFFF; padding: 0px; text-align:center">
+        <div class="text-center p-3" style="background-color: #FFFFFF;">
             @DateTime.Now.Year - @config.GetSection("ProjectName").Value:
             <a class="text-body" href="https://mdbootstrap.com/">( Salem Issa - 01030694882 - Round-1 )</a>
         </div>
@@ -225,8 +206,8 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-@*     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/BootstrapFooter.js" asp-append-version="true"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-cyP9NroPz9c3I0lV6vzY0yXt4ZvbT5p6xKk7VxuQf9qWc8jS0fU7u9zqxm0jv5s5q6u9w5CzUQwwj3XANlGa0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> *@    @await RenderSectionAsync("Scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-cyP9NroPz9c3I0lV6vzY0yXt4ZvbT5p6xKk7VxuQf9qWc8jS0fU7u9zqxm0jv5s5q6u9w5CzUQwwj3XANlGa0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

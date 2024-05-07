@@ -8,8 +8,6 @@ namespace Test.Repositories.Departement
 
         List<Test.Models.Departement> GetAllAsList();
 
-        List<Test.Models.Book> GetAllBooksAsList(int DepartementID);
-
         IQueryable<Test.Models.Departement> GetUsingSearchWord(string search);
 
         bool CheckDepartementNameUniqueForEdit(string DepartementName, int DepartementID);

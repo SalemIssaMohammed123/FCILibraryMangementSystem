@@ -5,14 +5,13 @@
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using Test.ViewModels
-@model BookViewModelForEdit
+@model Book
 <br /> <br />
 <h2 class="text-center">Edit Data into Book Tabel</h2>
 <form asp-action="Edit" asp-controller="Book" asp-route-id="@Model.BookID" method="post" enctype="multipart/form-data">
     <div class="mb-3" asp-validation-summary="All"></div>
     <br />
-    <partial name="_EditPartial" model="Model"></partial>
+    <partial name="_CreateEditPartial2" model="Model"></partial>
     <br />
     <button type="submit" value="Edit" class="btn btn-primary">Save</button>
 </form>

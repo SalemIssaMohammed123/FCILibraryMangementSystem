@@ -1,0 +1,43 @@
+﻿@using Test.ViewModels;
+@model RegisterUserViewModel
+<div class="mb-3">
+<label asp-for="ImageUrl" class="form-label"></label>
+<input type="file" class="form-control" name="image" id="image" accept="image/jpeg,image/png,image/gif,imag/svg" />
+<span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+<br />
+<div data-mdb-input-init class="form-outline mb-4">
+    <span asp-validation-for="UserName" class="text-danger"></span>
+    <input asp-for="UserName" class="form-control form-control-lg" />
+    <label asp-for="UserName" class="form-label"></label>
+</div>
+<br />
+<div data-mdb-input-init class="form-outline mb-4">
+    <span asp-validation-for="FirstName" class="text-danger"></span>
+    <input asp-for="FirstName" class="form-control form-control-lg" />
+    <label asp-for="FirstName" class="form-label"></label>
+</div>
+<br />
+<div data-mdb-input-init class="form-outline mb-4">
+    <span asp-validation-for="LastName" class="text-danger"></span>
+    <input asp-for="LastName" class="form-control form-control-lg" />
+    <label asp-for="LastName" class="form-label"></label>
+</div>
+<br />
+<div data-mdb-input-init class="form-outline mb-4">
+    <span asp-validation-for="Address" class="text-danger"></span>
+    <input asp-for="Address" class="form-control form-control-lg" />
+    <label asp-for="Address" class="form-label"></label>
+</div>
+<br />
+<div data-mdb-input-init class="form-outline mb-4">
+    <span asp-validation-for="Password" class="text-danger"></span>
+    <input asp-for="Password" class="form-control form-control-lg" />
+    <label class="form-label" asp-for="Password"></label>
+</div>
+
+<div data-mdb-input-init class="form-outline mb-4">
+    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    <input asp-for="ConfirmPassword" class="form-control form-control-lg" />
+    <label class="form-label" asp-for="ConfirmPassword"></label>
+</div>

@@ -182,10 +182,6 @@ namespace Test.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -205,6 +201,10 @@ namespace Test.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password_hint")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -246,11 +246,13 @@ namespace Test.Migrations
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<string>("DescripTion")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -278,9 +280,13 @@ namespace Test.Migrations
 
                     b.Property<string>("BookTitle")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<int?>("Count")
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DepartementID")
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentID")
@@ -304,44 +310,11 @@ namespace Test.Migrations
 
                     b.HasIndex("AuthorID");
 
-                    b.HasIndex("DepartmentID");
+                    b.HasIndex("DepartementID");
 
                     b.HasIndex("PublisherID");
 
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("Test.Models.BorrowBook", b =>
-                {
-                    b.Property<int>("BorrowBookID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BorrowBookID"), 1L, 1);
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("BorrowedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ReturnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("expired")
-                        .HasColumnType("bit");
-
-                    b.HasKey("BorrowBookID");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("BookId");
-
-                    b.ToTable("BorrowBook");
                 });
 
             modelBuilder.Entity("Test.Models.Departement", b =>
@@ -354,7 +327,8 @@ namespace Test.Migrations
 
                     b.Property<string>("DepartementName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("DepartementID");
 
@@ -371,7 +345,8 @@ namespace Test.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -383,39 +358,34 @@ namespace Test.Migrations
 
                     b.Property<string>("PublisherName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("PublisherID");
 
                     b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("Test.Models.ReportForBook", b =>
+            modelBuilder.Entity("Test.Models.Report", b =>
                 {
-                    b.Property<int>("ReportBookID")
+                    b.Property<int>("ReportId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportBookID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"), 1L, 1);
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("BookId")
+                    b.Property<int>("book_id")
                         .HasColumnType("int");
 
                     b.Property<string>("report")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ReportBookID");
+                    b.HasKey("ReportId");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("book_id");
 
-                    b.HasIndex("BookId");
-
-                    b.ToTable("ReportForBook");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -479,7 +449,7 @@ namespace Test.Migrations
 
                     b.HasOne("Test.Models.Departement", "Departement")
                         .WithMany("Books")
-                        .HasForeignKey("DepartmentID")
+                        .HasForeignKey("DepartementID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -496,49 +466,15 @@ namespace Test.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("Test.Models.BorrowBook", b =>
+            modelBuilder.Entity("Test.Models.Report", b =>
                 {
-                    b.HasOne("Test.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("BorrowedBooks")
-                        .HasForeignKey("ApplicationUserId")
+                    b.HasOne("Test.Models.Book", "book")
+                        .WithMany("reports")
+                        .HasForeignKey("book_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test.Models.Book", "Book")
-                        .WithMany("BorrowBooks")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Book");
-                });
-
-            modelBuilder.Entity("Test.Models.ReportForBook", b =>
-                {
-                    b.HasOne("Test.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("ReportedBook")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Test.Models.Book", "Book")
-                        .WithMany("ReportedBooks")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Book");
-                });
-
-            modelBuilder.Entity("Test.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("BorrowedBooks");
-
-                    b.Navigation("ReportedBook");
+                    b.Navigation("book");
                 });
 
             modelBuilder.Entity("Test.Models.Author", b =>
@@ -548,9 +484,7 @@ namespace Test.Migrations
 
             modelBuilder.Entity("Test.Models.Book", b =>
                 {
-                    b.Navigation("BorrowBooks");
-
-                    b.Navigation("ReportedBooks");
+                    b.Navigation("reports");
                 });
 
             modelBuilder.Entity("Test.Models.Departement", b =>
